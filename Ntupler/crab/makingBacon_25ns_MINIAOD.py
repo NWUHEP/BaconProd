@@ -51,28 +51,26 @@ if options.era == '2016':
 
 elif options.era == '2017':
     if options.isData:
-      process.GlobalTag.globaltag = cms.string('101X_dataRun2_Prompt_v11')
+      process.GlobalTag.globaltag = cms.string('94X_dataRun2_v11')
       JECTag='Fall17_17Nov2017_V32_102X_DATA'
     else:
-      process.GlobalTag.globaltag = cms.string('94X_mc2017_realistic_v14')
+      process.GlobalTag.globaltag = cms.string('94X_mc2017_realistic_v17')
       JECTag='Fall17_17Nov2017_V32_102X_MC'
 
 elif options.era == '2018':
     if options.isData:
-      process.GlobalTag.globaltag = cms.string('101X_dataRun2_Prompt_v11')
+      process.GlobalTag.globaltag = cms.string('102X_dataRun2_Sep2018ABC_v2')
       JECTag='Fall17_17Nov2017_V32_102X_DATA'
     else:
-      process.GlobalTag.globaltag = cms.string('102X_upgrade2018_realistic_v15')
+      process.GlobalTag.globaltag = cms.string('102X_upgrade2018_realistic_v18')
       JECTag='Fall17_17Nov2017_V32_102X_MC'
 
 from BaconProd.Ntupler.myJecFromDB_cff    import setupJEC
 setupJEC(process,options.isData,JECTag)
 if options.isData:
-  #process.jec.connect = cms.string('sqlite:////'+cmssw_base+'/src/BaconProd/Utils/data/'+JECTag+'.db')
-  process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
+  process.jec.connect = cms.string('sqlite:////'+cmssw_base+'/src/BaconProd/Utils/data/'+JECTag+'.db')
 else:
-  #process.jec.connect = cms.string('sqlite:////'+cmssw_base+'/src/BaconProd/Utils/data/'+JECTag+'.db')
-  process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
+  process.jec.connect = cms.string('sqlite:////'+cmssw_base+'/src/BaconProd/Utils/data/'+JECTag+'.db')
 
 #--------------------------------------------------------------------------------
 # Import of standard configurations
@@ -173,6 +171,12 @@ elif options.era == '2017':
                            era='2017-Nov17ReReco', #era is new to select between 2016 / 2017,  it defaults to 2017
                            phoIDModules=[]) #bug with default modules for photon VID; off for now
 
+elif options.era == '2018':
+    setupEgammaPostRecoSeq(process,
+                           runVID=True,
+                           era='2018-Prompt', #era is new to select between 2016 / 2017,  it defaults to 2017
+                           phoIDModules=[]) #bug with default modules for photon VID; off for now
+
 from PhysicsTools.PatUtils.l1ECALPrefiringWeightProducer_cfi import l1ECALPrefiringWeightProducer
 if options.era == '2016':
     process.prefiringweight = l1ECALPrefiringWeightProducer.clone(
@@ -180,7 +184,7 @@ if options.era == '2016':
         UseJetEMPt = cms.bool(False),
         PrefiringRateSystematicUncty = cms.double(0.2),
         SkipWarnings = False)
-elif options.era == '2017':
+elif options.era == '2017' or options.era=='2018':
     process.prefiringweight = l1ECALPrefiringWeightProducer.clone(
         DataEra = cms.string("2017BtoF"), 
         UseJetEMPt = cms.bool(False),
@@ -243,7 +247,7 @@ if options.doAlpaca:
 #--------------------------------------------------------------------------------
 # input settings
 #================================================================================
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(50) )
 
 if options.era == '2016':
     if options.isData:
@@ -256,6 +260,11 @@ elif options.era == '2017':
     else:
         #test_file = cms.untracked.vstring('/store/mc/RunIIFall17MiniAOD/QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8/MINIAODSIM/94X_mc2017_realistic_v10-v1/20000/46FB5EDE-F708-E811-A50F-0025905C53A4.root')
         test_file = cms.untracked.vstring('/store/mc/RunIIFall17MiniAOD/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/94X_mc2017_realistic_v10-v1/00000/005DC030-D3F4-E711-889A-02163E01A62D.root')
+elif options.era == '2018':
+    if options.isData:
+        test_file = cms.untracked.vstring('/store/data/Run2018A/DoubleMuon/MINIAOD/17Sep2018-v2/00000/0DFD591F-DB0C-F447-9FBF-BAC1BF96D9B1.root')
+    else:
+        test_file = cms.untracked.vstring('/store/mc/RunIIAutumn18MiniAOD/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v1/90000/F6F754E3-9026-CC48-9018-FFBB087DADA5.root')
 
 process.source = cms.Source("PoolSource",
                             #fileNames = cms.untracked.vstring('/store/mc/RunIISummer16MiniAODv2/GluGluHToZG_M-125_13TeV_powheg_pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/50000/702BC677-2AC8-E611-A5B3-02163E011463.root')
@@ -926,7 +935,7 @@ else:
                                              process.selectedUpdatedPatJets*
                                              process.QGTagger              *
                                              process.ntupler)
-    else:
+    elif options.era == '2017' or options.era == '2018':
         process.baconSequence = cms.Sequence(
                                              process.BadPFMuonFilter          *
                                              process.BadChargedCandidateFilter*
