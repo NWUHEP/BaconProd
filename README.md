@@ -1,53 +1,90 @@
 BaconProd
 =========
 
-Package for producing bacon files
+Branch for producting bacon ntuples for 2016-2018 data and MC. 
 
- * Depends on BaconAna package
- * Place package in `$CMSSW_BASE/src` area
+ * runs on CMS LPC
+ * uses CMSSW\_10\_2\_13
+ * depends on NWUHEP/BaconAna jbueghly\_prod branch
 
 All objects are declared in BaconAna and filled in BaconProd/Ntupler, see e.g.:
 
 [TJet for Jets](https://github.com/ksung25/BaconAna/blob/master/DataFormats/interface/TJet.hh)
-
 [FillerJet for Jets](https://github.com/ksung25/BaconProd/blob/master/Ntupler/src/FillerJet.cc)
 
 Setup
 ----------
 
-Run setup script after setting CMSSW environment:
-
 ```Shell
-source BaconProd/scripts/setup_prod.sh
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+export SCRAM_ARCH=slc6_amd64_gcc700
+cmsrel CMSSW_10_2_13
+cd CMSSW_10_2_13/src
+cmsenv
+git cms-merge-topic cmantill:baconprod-10213-v15
+git clone -b jbueghly_prod git@github.com:NWUHEP/BaconProd
+git clone -b jbueghly_prod git@github.com:NWUHEP/BaconAna
+git cms-merge-topic cms-egamma:slava77-btvDictFix_10210
+git cms-addpkg EgammaAnalysis/ElectronTools
+rm -rf EgammaAnalysis/ElectronTools/data
+git clone git@github.com:cms-egamma/EgammaAnalysis-ElectronTools.git EgammaAnalysis/ElectronTools/data
+cd EgammaAnalysis/ElectronTools/data
+git checkout ScalesSmearing2018_Dev
+cd - 
+git cms-merge-topic cms-egamma:EgammaPostRecoTools_dev
+scram b -j 12
 ```
-
-```
-$ git clone https://github.com/ksung/BaconProd.git
-$ git clone https://github.com/ksung/BaconAna.git
-$ scram b -j 10
-```
-
 Production
 ----------
 
-Is done through the following config scripts:
+To run, navigate to BaconProd/Ntupler/config. 
 
 ```
-$ makingBacon_MC_25ns_MINIAOD.py
-$ makingBacon_Data_25ns_MINIAOD.py
+cmsRun makingBacon_25ns_MINIAOD.py isData=<isData> doHLTFilter=<doHLTFilter> era=<era>
 ```
+ * isData: True for data, False for MC
+ * doHLTFilter: if True, filter events that don't pass Bacon triggers
+    + usually True for Data and False for MC
+ * era: 2016, 2017, or 2018
 
-For crab configuration see e.g.:
+Running with CRAB:
 ----------
 
+Navigate to the BaconProd/Ntupler/crab directory. CRAB submission settings are controlled by the multicrab script. 
+
+Specify the relevant splitting, configuration arguments, and datasets. Then run with:
 ```
-lxplus: /afs/cern.ch/work/p/pharris/public/bacon/prod/CMSSW_8_0_20/src/BaconProd/Ntupler/crab
-lpc: /uscms_data/d3/cmantill/bacon/CMSSW_9_4_0_patch1/src/BaconProd/Ntupler/crab
+./multicrab -c submit
+``` 
+
+and check status with 
+```
+./multicrab -c status -w <path to crab workArea>
 ```
 
-For running a list of samples e.g. mc.txt:
+Merging Output and Checking for Duplicates:
+----------
+
+Output ntuples can be merged by navigating to the BaconProd/Ntupler/crab/merge\_and\_validate directory and running:
+
 ```
-./runList.sh mc.txt
+./merge_ntuples.sh nTarget=$1 srcName=$2 targName=$3 srcDir=$4 targDir=$5
 ```
 
-Modify `run.sh` and `crab_template*.py` according to your preferences.
+ * nTarget: final number of merged files
+ * srcName: prefix in ntuple filenames: for example 'Output' or 'ntuple'
+ * targName: prefix in output merged files
+ * srcDir: directory containing files to be merged
+ * targDir: directory for output merged ntuples
+
+After merging, one may wish to validate that no events are duplicated in the output (from an errant merge). 
+This can be done by running:
+
+```
+./find_doubles.sh filePref=$1 startIdx=$2 inputdir=$3
+```
+
+ * filePref: prefix for files to check: for example 'Output' or 'ntuple'
+ * startIdx: initial number for filecount: for example 0 for Output\_0, Output\_1, etc.
+ * inputdir: eos directory where files are located; NO trailing slash; e.g. '/store/user/.../MYDIR'
+
