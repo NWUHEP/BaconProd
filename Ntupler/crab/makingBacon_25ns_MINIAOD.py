@@ -68,9 +68,9 @@ elif options.era == '2018':
 from BaconProd.Ntupler.myJecFromDB_cff    import setupJEC
 setupJEC(process,options.isData,JECTag)
 if options.isData:
-  process.jec.connect = cms.string('sqlite:////'+cmssw_base+'/src/BaconProd/Utils/data/'+JECTag+'.db')
+  process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
 else:
-  process.jec.connect = cms.string('sqlite:////'+cmssw_base+'/src/BaconProd/Utils/data/'+JECTag+'.db')
+  process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
 
 #--------------------------------------------------------------------------------
 # Import of standard configurations
@@ -319,7 +319,7 @@ process.ntupler = cms.EDAnalyzer('NtuplerMod',
     edmGenEventInfoName     = cms.untracked.string('generator'),
     edmGenParticlesName     = cms.untracked.string('prunedGenParticles'),
     edmGenPackParticlesName = cms.untracked.string('packedGenParticles'),
-    fillAllGen          = cms.untracked.bool(False),
+    fillAllGen          = cms.untracked.bool(True),
     fillLHEWeights      = cms.untracked.bool(True)
   ),
 

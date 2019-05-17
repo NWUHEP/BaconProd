@@ -319,7 +319,7 @@ process.ntupler = cms.EDAnalyzer('NtuplerMod',
     edmGenEventInfoName     = cms.untracked.string('generator'),
     edmGenParticlesName     = cms.untracked.string('prunedGenParticles'),
     edmGenPackParticlesName = cms.untracked.string('packedGenParticles'),
-    fillAllGen          = cms.untracked.bool(False),
+    fillAllGen          = cms.untracked.bool(True),
     fillLHEWeights      = cms.untracked.bool(True)
   ),
 
