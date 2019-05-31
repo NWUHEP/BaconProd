@@ -68,7 +68,7 @@ Merging Output and Checking for Duplicates:
 Output ntuples can be merged by navigating to the BaconProd/Ntupler/crab/merge\_and\_validate directory and running:
 
 ```
-./merge_ntuples.sh nTarget=$1 srcName=$2 targName=$3 srcDir=$4 targDir=$5
+./merge_ntuples.sh $nTarget $srcName $targName $srcDir $targDir
 ```
 
  * nTarget: final number of merged files
@@ -81,7 +81,7 @@ After merging, one may wish to validate that no events are duplicated in the out
 This can be done by running:
 
 ```
-./find_doubles.sh filePref=$1 startIdx=$2 inputdir=$3
+./find_doubles.sh $filePref $startIdx $inputdir
 ```
 
  * filePref: prefix for files to check: for example 'Output' or 'ntuple'
