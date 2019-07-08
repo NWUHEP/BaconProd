@@ -50,6 +50,11 @@ cmsRun makingBacon_25ns_MINIAOD.py isData=<isData> doHLTFilter=<doHLTFilter> era
 Running with CRAB:
 ----------
 
+Source crab:
+```
+source /cvmfs/cms.cern.ch/crab3/crab.sh
+```
+
 Navigate to the BaconProd/Ntupler/crab directory. CRAB submission settings are controlled by the multicrab script. 
 
 Specify the relevant splitting, configuration arguments, and datasets. Then run with:
