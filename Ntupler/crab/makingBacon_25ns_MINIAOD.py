@@ -289,7 +289,7 @@ process.options = cms.untracked.PSet(
 process.ntupler = cms.EDAnalyzer('NtuplerMod',
   skipOnHLTFail     = cms.untracked.bool(options.doHLTFilter),
   useTrigger        = cms.untracked.bool(True),
-  useTriggerObject  = cms.untracked.bool(True),
+  useTriggerObject  = cms.untracked.bool(False),
   TriggerObject     = cms.untracked.string("selectedPatTrigger"),
   TriggerFile       = cms.untracked.string(hlt_filename),
   useAOD            = cms.untracked.bool(False),
@@ -817,8 +817,7 @@ process.ntupler = cms.EDAnalyzer('NtuplerMod',
 
 # overwrite parameters for different eras 
 if options.era == '2017' or options.era == '2018':
-    process.ntupler.useTriggerObject = cms.untracked.bool(False)
-    process.ntupler.TriggerObject = cms.untracked.string("slimmedPatTrigger")
+    #process.ntupler.TriggerObject = cms.untracked.string("slimmedPatTrigger")
 
     #electron
     process.ntupler.Electron.edmEleMediumMVA = cms.untracked.string('mvaEleID-Fall17-noIso-V1-wp90')

@@ -251,7 +251,8 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(50) )
 
 if options.era == '2016':
     if options.isData:
-        test_file = cms.untracked.vstring('/store/data/Run2016C/DoubleEG/MINIAOD/03Feb2017-v1/810000/D8A12591-5DED-E611-BAF8-02163E019C24.root')
+        #test_file = cms.untracked.vstring('/store/data/Run2016C/DoubleEG/MINIAOD/03Feb2017-v1/810000/D8A12591-5DED-E611-BAF8-02163E019C24.root')
+        test_file = cms.untracked.vstring('/store/data/Run2016E/DoubleMuon/MINIAOD/17Jul2018-v1/40000/06B5B1FE-818C-E811-A064-E0071B7A9810.root')
     else:
         test_file = cms.untracked.vstring('/store/mc/RunIISummer16MiniAODv2/GluGluHToZG_M-125_13TeV_powheg_pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/50000/702BC677-2AC8-E611-A5B3-02163E011463.root')
 elif options.era == '2017':
@@ -289,7 +290,7 @@ process.options = cms.untracked.PSet(
 process.ntupler = cms.EDAnalyzer('NtuplerMod',
   skipOnHLTFail     = cms.untracked.bool(options.doHLTFilter),
   useTrigger        = cms.untracked.bool(True),
-  useTriggerObject  = cms.untracked.bool(True),
+  useTriggerObject  = cms.untracked.bool(False),
   TriggerObject     = cms.untracked.string("selectedPatTrigger"),
   TriggerFile       = cms.untracked.string(hlt_filename),
   useAOD            = cms.untracked.bool(False),
@@ -817,8 +818,7 @@ process.ntupler = cms.EDAnalyzer('NtuplerMod',
 
 # overwrite parameters for different eras 
 if options.era == '2017' or options.era == '2018':
-    process.ntupler.useTriggerObject = cms.untracked.bool(False)
-    process.ntupler.TriggerObject = cms.untracked.string("slimmedPatTrigger")
+    #process.ntupler.TriggerObject = cms.untracked.string("slimmedPatTrigger")
 
     #electron
     process.ntupler.Electron.edmEleMediumMVA = cms.untracked.string('mvaEleID-Fall17-noIso-V1-wp90')
@@ -995,3 +995,4 @@ if options.isData:
 #                               fileName       = cms.untracked.string ("test.root")                                                                                                                                                                              
 #                               )                                                                                                                                                                                                                                
 #process.endpath = cms.EndPath(process.out)    
+process.SimpleMemoryCheck = cms.Service("SimpleMemoryCheck", ignoreTotal = cms.untracked.int32(1))
