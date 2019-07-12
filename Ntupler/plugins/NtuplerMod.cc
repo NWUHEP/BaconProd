@@ -557,7 +557,7 @@ void NtuplerMod::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
     for(unsigned int irec=0; irec<fTrigger->fRecords.size(); irec++) {
       if(fTrigger->fRecords[irec].hltPathIndex == (unsigned int)-1) continue;
       if(hTrgRes->accept(fTrigger->fRecords[irec].hltPathIndex)) {
-	triggerBits [fTrigger->fRecords[irec].baconTrigBit] = 1;
+          triggerBits [fTrigger->fRecords[irec].baconTrigBit] = 1;
       }
     }
     if(fSkipOnHLTFail && triggerBits == 0) return;  
@@ -714,6 +714,7 @@ void NtuplerMod::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 //--------------------------------------------------------------------------------------------------
 void NtuplerMod::initHLT(const edm::TriggerResults& result, const edm::TriggerNames& triggerNames)
 {
+  assert(kNTrigBit >= fTrigger->fRecords.size()); // check that TriggerBits is sufficiently long 
   for(unsigned int irec=0; irec<fTrigger->fRecords.size(); irec++) {
     fTrigger->fRecords[irec].hltPathName  = "";
     fTrigger->fRecords[irec].hltPathIndex = (unsigned int)-1;
