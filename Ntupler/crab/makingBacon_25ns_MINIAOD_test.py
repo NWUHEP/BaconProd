@@ -7,6 +7,7 @@ import os
 process = cms.Process('MakingBacon')
 
 options = vp.VarParsing('analysis')
+local = False
 
 # register command line options
 options.register('isData',
@@ -33,6 +34,11 @@ options.register('era',
                  vp.VarParsing.varType.string, 
                  )
 
+options.register('local',
+                 False, # default value
+                 vp.VarParsing.multiplicity.singleton,
+                 vp.VarParsing.varType.string, 
+                 )
 # user input values
 options.parseArguments()
 
@@ -67,12 +73,16 @@ elif options.era == '2018':
 
 from BaconProd.Ntupler.myJecFromDB_cff    import setupJEC
 setupJEC(process,options.isData,JECTag)
-if options.isData:
-  #process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
-  process.jec.connect = cms.string('sqlite_file:/uscms/home/corderom/nobackup/2016/CMSSW_10_2_13/src/BaconProd/Utils/data/'+JECTag+'.db')
+if local:
+	if options.isData:
+	  process.jec.connect = cms.string('sqlite_file:/uscms/home/corderom/nobackup/2016/CMSSW_10_2_13/src/BaconProd/Utils/data/'+JECTag+'.db')
+	else:
+	  process.jec.connect = cms.string('sqlite_file:/uscms/home/corderom/nobackup/2016/CMSSW_10_2_13/src/BaconProd/Utils/data/'+JECTag+'.db')
 else:
-  #process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
-  process.jec.connect = cms.string('sqlite_file:/uscms/home/corderom/nobackup/2016/CMSSW_10_2_13/src/BaconProd/Utils/data/'+JECTag+'.db')
+	if options.isData:
+	  process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
+	else:
+	  process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
 
 #--------------------------------------------------------------------------------
 # Import of standard configurations
@@ -255,7 +265,9 @@ if options.era == '2016':
     if options.isData:
         test_file = cms.untracked.vstring('/store/data/Run2016C/DoubleEG/MINIAOD/03Feb2017-v1/810000/D8A12591-5DED-E611-BAF8-02163E019C24.root')
     else:
-        test_file = cms.untracked.vstring('/store/mc/RunIISummer16MiniAODv2/GluGluHToZG_M-125_13TeV_powheg_pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/50000/702BC677-2AC8-E611-A5B3-02163E011463.root')
+        #test_file = cms.untracked.vstring('/store/mc/RunIISummer16MiniAODv2/GluGluHToZG_M-125_13TeV_powheg_pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/50000/702BC677-2AC8-E611-A5B3-02163E011463.root')
+        #test_file = cms.untracked.vstring('/store/mc/RunIISummer16MiniAODv2/ZGToLLG_01J_5f_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/80000/18F1DFD7-9609-E811-8E51-FA163E8F66CF.root')
+        test_file = cms.untracked.vstring('/store/mc/RunIISummer16MiniAODv2/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/90000/E08FD672-38CB-E611-889A-0CC47A7DFFF0.root')
 elif options.era == '2017':
     if options.isData:
         test_file = cms.untracked.vstring('/store/data/Run2017F/DoubleEG/MINIAOD/31Mar2018-v1/90001/F61EA338-8E37-E811-A203-0025905C4262.root')

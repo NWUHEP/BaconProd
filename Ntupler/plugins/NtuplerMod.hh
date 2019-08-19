@@ -14,6 +14,10 @@
 // forward class declarations
 #include "DataFormats/VertexReco/interface/VertexFwd.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenRunInfoProduct.h"
+
+#include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
+
+
 class TFile;
 class TH1D;
 class TTree;
@@ -87,6 +91,7 @@ class NtuplerMod : public edm::EDAnalyzer {
     edm::EDGetTokenT<edm::TriggerResults>    fTokTrgRes       ;
     edm::EDGetTokenT<trigger::TriggerEvent>    fTokTrgEvt       ;
     edm::EDGetTokenT<pat::TriggerObjectStandAloneCollection>    fTokTrgObj       ;
+
     bool fFillLHEWgt;
     bool fUseAODJet,      fUseAODFatJet,      fUseAODFatterJet;
     bool fUseAODPuppiJet, fUseAODFatPuppiJet, fUseAODFatterPuppiJet;

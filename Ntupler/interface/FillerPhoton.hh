@@ -22,6 +22,12 @@
 #include "DataFormats/EgammaCandidates/interface/GsfElectronFwd.h"
 #include "DataFormats/BeamSpot/interface/BeamSpot.h"
 
+#include "DataFormats/RecoCandidate/interface/RecoEcalCandidate.h"
+#include "RecoEcal/EgammaCoreTools/interface/EcalClusterLazyTools.h"
+#include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
+
+
+
 class TClonesArray;
 namespace trigger {
   class TriggerEvent;
@@ -78,10 +84,19 @@ namespace baconhep
       edm::EDGetTokenT<reco::GsfElectronCollection>  fTokEleName;
       edm::EDGetTokenT<reco::ConversionCollection>   fTokConvName;
       edm::EDGetTokenT<reco::SuperClusterCollection> fTokSCName;
-      
+
+      edm::EDGetTokenT<EcalRecHitCollection> fTokebReducedRecHitCollection;
+      edm::EDGetTokenT<EcalRecHitCollection> fTokeeReducedRecHitCollection;
+      edm::EDGetTokenT<EcalRecHitCollection> fTokesReducedRecHitCollection;
+
       std::string fMVASpring16;
       std::string fMVAFall17V1;
       std::string fMVAFall17V2;
+
+      edm::InputTag feeReducedRecHitCollection;
+      edm::InputTag fesReducedRecHitCollection;
+      edm::InputTag febReducedRecHitCollection;
+
       bool fUseTO;
       bool fUseAOD;
   };

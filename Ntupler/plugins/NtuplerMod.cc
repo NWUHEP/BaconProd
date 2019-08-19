@@ -43,6 +43,8 @@
 #include "DataFormats/VertexReco/interface/Vertex.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenRunInfoProduct.h"
 
+#include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
+
 // ROOT classes
 #include <TFile.h>
 #include <TH1D.h>
@@ -152,6 +154,7 @@ NtuplerMod::NtuplerMod(const edm::ParameterSet &iConfig):
   fTokTrgRes           = consumes<edm::TriggerResults>(edm::InputTag(fHLTTag)); 
   fTokTrgEvt           = consumes<trigger::TriggerEvent>(edm::InputTag(fHLTTag)); 
   fTokTrgObj           = consumes<pat::TriggerObjectStandAloneCollection>(edm::InputTag(fHLTObjTag)); 
+
   // Don't write TObject part of the objects
   baconhep::TEventInfo::Class()->IgnoreTObjectStreamer();
   baconhep::TGenEventInfo::Class()->IgnoreTObjectStreamer();
