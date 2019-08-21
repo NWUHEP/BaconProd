@@ -1,5 +1,3 @@
-# combined configuration for all eras for data and MC
-
 import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as vp
 import os
@@ -33,6 +31,11 @@ options.register('era',
                  vp.VarParsing.varType.string, 
                  )
 
+options.register('isLocal',
+                 '2016', # default value
+                 vp.VarParsing.multiplicity.singleton,
+                 vp.VarParsing.varType.bool, 
+                 )
 # user input values
 options.parseArguments()
 
@@ -1001,3 +1004,4 @@ if options.isData:
 #                               fileName       = cms.untracked.string ("test.root")                                                                                                                                                                              
 #                               )                                                                                                                                                                                                                                
 #process.endpath = cms.EndPath(process.out)    
+
