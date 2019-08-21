@@ -34,12 +34,9 @@ namespace baconhep {
   class FillerGenInfo;
   class FillerGenJets;
   class FillerVertex;
-  class FillerMuon;
-  class FillerPhoton;
-  class FillerTau;
   class FillerCaloJet;
-  class FillerJet;
   class FillerGenJet;
+  class FillerJet;
   class FillerPF;
   class FillerRH;
 }
@@ -106,12 +103,9 @@ class NtuplerModTest : public edm::EDAnalyzer {
     baconhep::FillerGenInfo   *fFillerGenInfo;
     baconhep::FillerGenJets   *fFillerGenJet,*fFillerGenFatJet;
     baconhep::FillerVertex    *fFillerPV;
-    baconhep::FillerMuon      *fFillerMuon;
-    baconhep::FillerPhoton    *fFillerPhoton;
-    baconhep::FillerTau       *fFillerTau;
     baconhep::FillerCaloJet   *fFillerCaloJet;
-    baconhep::FillerJet       *fFillerJet, *fFillerFatJet, *fFillerFatterJet;
-    baconhep::FillerJet       *fFillerPuppiJet, *fFillerFatPuppiJet, *fFillerFatterPuppiJet;
+    baconhep::FillerJet       *fFillerFatJet, *fFillerFatterJet;
+    baconhep::FillerJet       *fFillerFatPuppiJet, *fFillerFatterPuppiJet;
     baconhep::FillerPF        *fFillerPF;    
     baconhep::FillerRH        *fFillerRH;    
     
@@ -122,12 +116,9 @@ class NtuplerModTest : public edm::EDAnalyzer {
     bool fIsActiveGenJet;
     bool fIsActiveGenFatJet;
     bool fIsActivePV;
-    bool fIsActiveMuon;
-    bool fIsActivePhoton;
-    bool fIsActiveTau;
     bool fIsActiveCaloJet;
-    bool fIsActiveJet, fIsActiveFatJet, fIsActiveFatterJet;
-    bool fIsActivePuppiJet, fIsActiveFatPuppiJet, fIsActiveFatterPuppiJet;
+    bool fIsActiveFatJet, fIsActiveFatterJet;
+    bool fIsActiveFatPuppiJet, fIsActiveFatterPuppiJet;
     bool fIsActivePF;
     bool fIsActiveRH;
     bool fUseTrigger;
@@ -145,15 +136,12 @@ class NtuplerModTest : public edm::EDAnalyzer {
     TClonesArray            *fGenParArr;
     TClonesArray            *fGenJetArr;
     TClonesArray            *fGenFatJetArr;
-    TClonesArray	    *fMuonArr;
-    TClonesArray	    *fTauArr;
     TClonesArray	    *fCaloJetArr;
-    TClonesArray	    *fJetArr, *fFatJetArr, *fFatterJetArr;
-    TClonesArray	    *fPuppiJetArr, *fFatPuppiJetArr, *fFatterPuppiJetArr;
-    TClonesArray	    *fPhotonArr;
+    TClonesArray	    *fFatJetArr, *fFatterJetArr;
+    TClonesArray	    *fFatPuppiJetArr, *fFatterPuppiJetArr;
     TClonesArray	    *fPVArr;
-    TClonesArray	    *fAddJetArr, *fAddFatJetArr, *fAddFatterJetArr;
-    TClonesArray	    *fAddPuppiJetArr, *fAddFatPuppiJetArr, *fAddFatterPuppiJetArr;
+    TClonesArray	    *fAddFatJetArr, *fAddFatterJetArr;
+    TClonesArray	    *fAddFatPuppiJetArr, *fAddFatterPuppiJetArr;
     TClonesArray	    *fPFParArr;
     TClonesArray	    *fRHParArr;
     TClonesArray            *fSVArr;

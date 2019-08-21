@@ -67,9 +67,7 @@ def main():
         config = config()
 
         config.General.requestName = None
-        config.General.workArea = '2016_data_legacy'
-        #config.General.workArea = '2016_mc_legacy'
-        #config.General.workArea = '2016_data'
+        config.General.workArea = '2016_mc_legacy'
         config.General.transferOutputs = True
         config.General.transferLogs = False
 
@@ -99,9 +97,7 @@ def main():
 	#config.Data.totalUnits = 500000
         #config.Data.totalUnits = 3
         config.Data.outputDatasetTag = None
-        #config.Data.outLFNDirBase = '/store/user/%s/mc_2016/' % (getUsernameFromSiteDB())
-        #config.Data.outLFNDirBase = '/store/user/%s/mc_legacy_2016/' % (getUsernameFromSiteDB())
-        config.Data.outLFNDirBase = '/store/user/%s/data_legacy_2016/' % (getUsernameFromSiteDB())
+        config.Data.outLFNDirBase = '/store/user/%s/mc_legacy_2016/' % (getUsernameFromSiteDB())
 
         config.Site.storageSite = 'T3_US_FNALLPC' # Choose your site. 
         #--------------------------------------------------------
