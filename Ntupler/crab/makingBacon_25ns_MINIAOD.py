@@ -32,7 +32,7 @@ options.register('era',
                  )
 
 options.register('isLocal',
-                 '2016', # default value
+                 'False', # default value
                  vp.VarParsing.multiplicity.singleton,
                  vp.VarParsing.varType.bool, 
                  )
@@ -71,12 +71,15 @@ elif options.era == '2018':
 from BaconProd.Ntupler.myJecFromDB_cff    import setupJEC
 setupJEC(process,options.isData,JECTag)
 if options.isData:
-  #process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
-  process.jec.connect = cms.string('sqlite_file:/uscms/home/corderom/nobackup/2016/CMSSW_10_2_13/src/BaconProd/Utils/data/'+JECTag+'.db')
+	if options.isLocal:
+		process.jec.connect = cms.string('sqlite_file:/uscms/home/corderom/nobackup/2016/CMSSW_10_2_13/src/BaconProd/Utils/data/'+JECTag+'.db')
+	else:
+		process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
 else:
-  #process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
-  process.jec.connect = cms.string('sqlite_file:/uscms/home/corderom/nobackup/2016/CMSSW_10_2_13/src/BaconProd/Utils/data/'+JECTag+'.db')
-
+  	if options.isLocal:
+		process.jec.connect = cms.string('sqlite_file:/uscms/home/corderom/nobackup/2016/CMSSW_10_2_13/src/BaconProd/Utils/data/'+JECTag+'.db')
+	else:
+  		process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
 #--------------------------------------------------------------------------------
 # Import of standard configurations
 #================================================================================
@@ -256,12 +259,14 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(50) )
 
 if options.era == '2016':
     if options.isData:
-        test_file = cms.untracked.vstring('/store/data/Run2016C/DoubleEG/MINIAOD/03Feb2017-v1/810000/D8A12591-5DED-E611-BAF8-02163E019C24.root')
+        #test_file = cms.untracked.vstring('/store/data/Run2016C/DoubleEG/MINIAOD/03Feb2017-v1/810000/D8A12591-5DED-E611-BAF8-02163E019C24.root')
+        test_file = cms.untracked.vstring('/store/data/Run2016B/DoubleEG/MINIAOD/17Jul2018_ver1-v1/20000/F6F9090E-C395-E811-8593-0242AC1C0503.root')
     else:
         test_file = cms.untracked.vstring('/store/mc/RunIISummer16MiniAODv2/GluGluHToZG_M-125_13TeV_powheg_pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/50000/702BC677-2AC8-E611-A5B3-02163E011463.root')
 elif options.era == '2017':
     if options.isData:
-        test_file = cms.untracked.vstring('/store/data/Run2017F/DoubleEG/MINIAOD/31Mar2018-v1/90001/F61EA338-8E37-E811-A203-0025905C4262.root')
+        #test_file = cms.untracked.vstring('/store/data/Run2017F/DoubleEG/MINIAOD/31Mar2018-v1/90001/F61EA338-8E37-E811-A203-0025905C4262.root')
+        test_file = cms.untracked.vstring('/store/data/Run2017B/DoubleMuon/MINIAOD/31Mar2018-v1/00000/06893E33-AB37-E811-A32E-0019B9CAB9CB.root')
     else:
         #test_file = cms.untracked.vstring('/store/mc/RunIIFall17MiniAOD/QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8/MINIAODSIM/94X_mc2017_realistic_v10-v1/20000/46FB5EDE-F708-E811-A50F-0025905C53A4.root')
         test_file = cms.untracked.vstring('/store/mc/RunIIFall17MiniAOD/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/94X_mc2017_realistic_v10-v1/00000/005DC030-D3F4-E711-889A-02163E01A62D.root')
