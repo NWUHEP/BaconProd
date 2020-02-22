@@ -273,7 +273,7 @@ process.options = cms.untracked.PSet(
 #--------------------------------------------------------------------------------
 # Bacon making settings
 #================================================================================
-process.ntupler = cms.EDAnalyzer('NtuplerMod',
+process.ntupler = cms.EDAnalyzer('NtuplerMod_REDUCED',
   skipOnHLTFail     = cms.untracked.bool(options.doHLTFilter),
   useTrigger        = cms.untracked.bool(True),
   useTriggerObject  = cms.untracked.bool(False),

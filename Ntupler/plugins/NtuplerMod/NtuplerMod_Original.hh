@@ -34,18 +34,22 @@ namespace baconhep {
   class FillerGenInfo;
   class FillerGenJets;
   class FillerVertex;
+  class FillerElectron;
+  class FillerMuon;
+  class FillerPhoton;
+  class FillerTau;
   class FillerCaloJet;
-  class FillerGenJet;
   class FillerJet;
+  class FillerGenJet;
   class FillerPF;
   class FillerRH;
 }
 
 
-class NtuplerModTest : public edm::EDAnalyzer {
+class NtuplerMod : public edm::EDAnalyzer {
   public:
-    explicit NtuplerModTest(const edm::ParameterSet &iConfig);
-    ~NtuplerModTest();
+    explicit NtuplerMod(const edm::ParameterSet &iConfig);
+    ~NtuplerMod();
 
     static void fillDescriptions(edm::ConfigurationDescriptions &descriptions);
 
@@ -103,9 +107,14 @@ class NtuplerModTest : public edm::EDAnalyzer {
     baconhep::FillerGenInfo   *fFillerGenInfo;
     baconhep::FillerGenJets   *fFillerGenJet,*fFillerGenFatJet;
     baconhep::FillerVertex    *fFillerPV;
+    baconhep::FillerElectron  *fFillerEle;
+    baconhep::FillerMuon      *fFillerMuon;
+    baconhep::FillerPhoton    *fFillerPhoton;
+    baconhep::FillerTau       *fFillerTau;
+
     baconhep::FillerCaloJet   *fFillerCaloJet;
-    baconhep::FillerJet       *fFillerFatJet, *fFillerFatterJet;
-    baconhep::FillerJet       *fFillerFatPuppiJet, *fFillerFatterPuppiJet;
+    baconhep::FillerJet       *fFillerJet, *fFillerFatJet, *fFillerFatterJet;
+    baconhep::FillerJet       *fFillerPuppiJet, *fFillerFatPuppiJet, *fFillerFatterPuppiJet;
     baconhep::FillerPF        *fFillerPF;    
     baconhep::FillerRH        *fFillerRH;    
     
@@ -116,9 +125,13 @@ class NtuplerModTest : public edm::EDAnalyzer {
     bool fIsActiveGenJet;
     bool fIsActiveGenFatJet;
     bool fIsActivePV;
+    bool fIsActiveEle;
+    bool fIsActiveMuon;
+    bool fIsActivePhoton;
+    bool fIsActiveTau;
     bool fIsActiveCaloJet;
-    bool fIsActiveFatJet, fIsActiveFatterJet;
-    bool fIsActiveFatPuppiJet, fIsActiveFatterPuppiJet;
+    bool fIsActiveJet, fIsActiveFatJet, fIsActiveFatterJet;
+    bool fIsActivePuppiJet, fIsActiveFatPuppiJet, fIsActiveFatterPuppiJet;
     bool fIsActivePF;
     bool fIsActiveRH;
     bool fUseTrigger;
@@ -136,12 +149,16 @@ class NtuplerModTest : public edm::EDAnalyzer {
     TClonesArray            *fGenParArr;
     TClonesArray            *fGenJetArr;
     TClonesArray            *fGenFatJetArr;
+    TClonesArray	    *fEleArr;
+    TClonesArray	    *fMuonArr;
+    TClonesArray            *fTauArr;
     TClonesArray	    *fCaloJetArr;
-    TClonesArray	    *fFatJetArr, *fFatterJetArr;
-    TClonesArray	    *fFatPuppiJetArr, *fFatterPuppiJetArr;
+    TClonesArray	    *fJetArr, *fFatJetArr, *fFatterJetArr;
+    TClonesArray	    *fPuppiJetArr, *fFatPuppiJetArr, *fFatterPuppiJetArr;
+    TClonesArray	    *fPhotonArr;
     TClonesArray	    *fPVArr;
-    TClonesArray	    *fAddFatJetArr, *fAddFatterJetArr;
-    TClonesArray	    *fAddFatPuppiJetArr, *fAddFatterPuppiJetArr;
+    TClonesArray	    *fAddJetArr, *fAddFatJetArr, *fAddFatterJetArr;
+    TClonesArray	    *fAddPuppiJetArr, *fAddFatPuppiJetArr, *fAddFatterPuppiJetArr;
     TClonesArray	    *fPFParArr;
     TClonesArray	    *fRHParArr;
     TClonesArray            *fSVArr;

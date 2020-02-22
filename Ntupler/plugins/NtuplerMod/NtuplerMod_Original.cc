@@ -86,7 +86,7 @@ NtuplerMod::NtuplerMod(const edm::ParameterSet &iConfig):
   fFillerEle         (0),
   fFillerMuon        (0),
   fFillerPhoton      (0),
-  fFillerTau         (0),
+  fFillerTau	     (0),
   //fFillerCaloJet     (0),
   fFillerJet         (0),
   fFillerFatJet      (0),
@@ -163,10 +163,10 @@ NtuplerMod::NtuplerMod(const edm::ParameterSet &iConfig):
   baconhep::TGenJet::Class()->IgnoreTObjectStreamer();
   baconhep::TMuon::Class()->IgnoreTObjectStreamer();
   baconhep::TElectron::Class()->IgnoreTObjectStreamer();
-  baconhep::TTau::Class()->IgnoreTObjectStreamer();
   baconhep::TJet::Class()->IgnoreTObjectStreamer();
   baconhep::TSVtx::Class()->IgnoreTObjectStreamer();
   baconhep::TPhoton::Class()->IgnoreTObjectStreamer();
+  baconhep::TTau::Class()->IgnoreTObjectStreamer();
   baconhep::TVertex::Class()->IgnoreTObjectStreamer();
   baconhep::TAddJet::Class()->IgnoreTObjectStreamer();
   baconhep::TPFPart::Class()->IgnoreTObjectStreamer();
@@ -257,15 +257,7 @@ NtuplerMod::NtuplerMod(const edm::ParameterSet &iConfig):
       fFillerTau = new baconhep::FillerTau(cfg, fUseAOD,consumesCollector()); assert(fFillerTau);
     }
   }
-  //!!!! Temporary Calo Jets
-  //if(iConfig.existsAs<edm::ParameterSet>("AK4Calo",false)) {
-  //  edm::ParameterSet cfg(iConfig.getUntrackedParameter<edm::ParameterSet>("AK4Calo"));
-  //  fIsActiveCaloJet = cfg.getUntrackedParameter<bool>("isActive");
-  //  if(fIsActiveCaloJet) {
-  //    fFillerCaloJet = new baconhep::FillerCaloJet(cfg); assert(fFillerCaloJet);
-  //    fCaloJetArr = new TClonesArray("baconhep::TCaloJet");       assert(fCaloJetArr);
-  //  }
-  //}
+
   if(iConfig.existsAs<edm::ParameterSet>("PFCand",false)) {
     edm::ParameterSet cfg(iConfig.getUntrackedParameter<edm::ParameterSet>("PFCand"));
     fIsActivePF = cfg.getUntrackedParameter<bool>("isActive");
@@ -597,13 +589,13 @@ void NtuplerMod::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
   if(fUseTrigger) { 
     iEvent.getByToken(fTokTrgEvt,hTrgEvt);
     iEvent.getByToken(fTokTrgObj,hTrgObjs);
-    if(fUseTriggerObject) {
+    if(fUseTriggerObject) { 
       const edm::TriggerNames triggerNames = iEvent.triggerNames(*hTrgRes);
       for(pat::TriggerObjectStandAlone tobj : *hTrgObjs) {
-        pat::TriggerObjectStandAlone patTriggerObjectStandAloneUnpacked(tobj);
-        patTriggerObjectStandAloneUnpacked.unpackPathNames(triggerNames);
-        patTriggerObjectStandAloneUnpacked.unpackFilterLabels(iEvent,*hTrgRes);
-        uFTrgObjs->push_back(patTriggerObjectStandAloneUnpacked);
+	pat::TriggerObjectStandAlone patTriggerObjectStandAloneUnpacked(tobj);
+	patTriggerObjectStandAloneUnpacked.unpackPathNames(triggerNames);
+      patTriggerObjectStandAloneUnpacked.unpackFilterLabels(iEvent,*hTrgRes);
+      uFTrgObjs->push_back(patTriggerObjectStandAloneUnpacked);
       }
     }
     if(fUseAOD) {hTrgEvtDummy  = &(*hTrgEvt); }
@@ -629,10 +621,6 @@ void NtuplerMod::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
     if(fUseAOD) { fFillerTau->fill(fTauArr, iEvent, iSetup, *pv, fTrigger->fRecords, *hTrgEvt);  }
     else        { fFillerTau->fill(fTauArr, iEvent, iSetup, *pv, fTrigger->fRecords, *uFTrgObjs); }  // (!) consolidate fillers for AOD and MINIAOD
   }
-  //  if(fIsActiveCaloJet) {
-  //  fCaloJetArr->Clear();
-  //  if(fUseAOD) { fFillerCaloJet->fill(fCaloJetArr,iEvent, iSetup,fTrigger->fRecords, *hTrgEvt);  }
-  //}
   if(fIsActivePF) { 
     fPFParArr->Clear();
     if(fUseAOD) { fFillerPF->fill(fPFParArr,fPVArr,iEvent); }

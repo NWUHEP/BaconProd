@@ -51,11 +51,11 @@ namespace trigger {
 
 namespace baconhep
 {
-  class FillerJet
+  class FillerJet_REDUCED
   {
     public:
-       FillerJet(const edm::ParameterSet &iConfig, const bool useAOD,edm::ConsumesCollector && iC);
-      ~FillerJet();
+       FillerJet_REDUCED(const edm::ParameterSet &iConfig, const bool useAOD,edm::ConsumesCollector && iC);
+      ~FillerJet_REDUCED();
 
       // === filler for AOD ===
       void fill(TClonesArray                     *array,                        // output array to be filled

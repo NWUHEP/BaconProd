@@ -283,6 +283,7 @@ void FillerElectron::fill(TClonesArray *array,
     }
     
     if(fUseTO) pElectron->hltMatchBits = TriggerTools::matchHLT(pElectron->eta, pElectron->phi, triggerRecords, triggerEvent);
+    //std::cout << "ELECTRON HLT TRIG:: " << pElectron->hltMatchBits << std::endl;
   }
 }
 
@@ -516,6 +517,7 @@ void FillerElectron::fill(TClonesArray *array,
     // Obtain a track ID, unique per event. The track ID is the index in the general tracks collection
     pElectron->trkID = -1;  // general tracks not in MINIAOD
     if(fUseTO) pElectron->hltMatchBits = TriggerTools::matchHLT(pElectron->eta, pElectron->phi, triggerRecords, triggerObjects);
+    //std::cout << "ELECTRON HLT TRIG:: " << pElectron->hltMatchBits << std::endl;
   }
 }
 

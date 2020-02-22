@@ -232,6 +232,15 @@ void FillerMuon::fill(TClonesArray *array,
     }
     
     if(fUseTO) pMuon->hltMatchBits = TriggerTools::matchHLT(pMuon->eta, pMuon->phi, triggerRecords, triggerEvent);
+    std::cout << " Layer 111" << std::endl;
+    std::cout << "-------------------------------------------------------------------------" << std::endl;
+    for(unsigned int irec=0; irec<triggerRecords.size(); irec++) {
+      for(unsigned int iobj=0; iobj<triggerRecords[irec].objectMap.size(); iobj++) {
+        const std::string    filterName  = triggerRecords[irec].objectMap[iobj].first;
+        const unsigned int  filterBit   = triggerRecords[irec].objectMap[iobj].second;
+      }
+    }
+    std::cout << " TRUE? " << fUseTO << " | MUON HLT TRIG:: " << pMuon->hltMatchBits << std::endl;
   }
 
   //
@@ -330,7 +339,19 @@ void FillerMuon::fill(TClonesArray *array,
       pMuon->nPixLayers   = itTrk->hitPattern().pixelLayersWithMeasurement();
       pMuon->nMatchStn    = 0;
       pMuon->trkID        = trkIndex;
+   
+ 
       if(fUseTO) pMuon->hltMatchBits = TriggerTools::matchHLT(pMuon->eta, pMuon->phi, triggerRecords, triggerEvent);
+
+      std::cout << " Layer 22 " << std::endl;
+      std::cout << "-------------------------------------------------------------------------" << std::endl;
+      for(unsigned int irec=0; irec<triggerRecords.size(); irec++) {
+        for(unsigned int iobj=0; iobj<triggerRecords[irec].objectMap.size(); iobj++) {
+          const std::string   filterName  = triggerRecords[irec].objectMap[iobj].first;
+          const unsigned int  filterBit  = triggerRecords[irec].objectMap[iobj].second;
+        }
+      }
+      std::cout << " TRUE? " << fUseTO << " | MUON HLT TRIG:: " << pMuon->hltMatchBits << std::endl;
     }    
   } 
 }
@@ -493,6 +514,16 @@ void FillerMuon::fill(TClonesArray *array,
     pMuon->trkID = -1;  // general tracks not in MINIAOD
 
     if(fUseTO) pMuon->hltMatchBits = TriggerTools::matchHLT(pMuon->eta, pMuon->phi, triggerRecords, triggerObjects);
+    std::cout << " Layer 33 " << std::endl;
+    std::cout << "-------------------------------------------------------------------------" << std::endl;
+    for(unsigned int irec=0; irec<triggerRecords.size(); irec++) {
+      for(unsigned int iobj=0; iobj<triggerRecords[irec].objectMap.size(); iobj++) {
+        const std::string   filterName  = triggerRecords[irec].objectMap[iobj].first;
+        const unsigned int  filterBit  = triggerRecords[irec].objectMap[iobj].second;
+      }
+    }
+    std::cout << " TRUE? " << fUseTO << " | MUON HLT TRIG:: " << pMuon->hltMatchBits << std::endl;
+    //std::cout << std::endl << triggerRecords << std::endl;
   }
 }
 void FillerMuon::computeIso(double &iEta,double &iPhi, const double extRadius,

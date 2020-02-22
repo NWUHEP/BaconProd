@@ -55,14 +55,18 @@ def getOptions():
 
 def main():
     #################################
+    #reduced     = True
+    reduced     = False
     era         = '2017'
-    doHLTFilter = 'False'
     isData      = 'False'
     isLocal     = 'False'
+
     if isData == 'False':
 	sampleType = 'mc'
+	doHLTFilter = 'False'
     else:
 	sampleType = 'data'
+	doHLTFilter = 'True'
 
     ##################################
     options = getOptions()
@@ -77,15 +81,17 @@ def main():
         config = config()
 
         config.General.requestName     = None
-        #config.General.workArea        = era+'_mc_legacy'
-        config.General.workArea        = era+'_'+sampleType+'_legacy'
+        #config.General.workArea        = era+'_'+sampleType+'_legacy'
+        #config.General.workArea        = era+'_'+sampleType+'_legacy_trigBits'
+        config.General.workArea        = era+'_'+sampleType+'_legacy_trigBits_resubmit'
         config.General.transferOutputs = True
         config.General.transferLogs    = False
 
         config.JobType.pluginName = 'Analysis'
-        #config.JobType.psetName = 'makingBacon_25ns_MINIAOD.py'
-        config.JobType.psetName = 'makingBacon_25ns_MINIAOD.py'
-        #config.JobType.pyCfgParams = ['isData=False', 'doHLTFilter=False', 'era=2016','isLocal=False']
+	if reduced:
+	        config.JobType.psetName = 'makingBacon_25ns_MINIAOD_REDUCED.py'
+	else:
+        	config.JobType.psetName = 'makingBacon_25ns_MINIAOD.py'
         config.JobType.pyCfgParams = ['isData='+isData, 'doHLTFilter='+doHLTFilter, 'era='+era,'isLocal='+isLocal]
         config.JobType.outputFiles = ['Output.root']
 
@@ -98,19 +104,28 @@ def main():
         #config.Site.blacklist = ["T2_US_UCSD"]
         config.Data.splitting = 'EventAwareLumiBased'
         #config.Data.splitting = 'LumiBased'
+
         #config.Data.splitting = 'FileBased'
 	#config.Data.runRange = ''
-	#config.Data.lumiMask  = ''
+	config.Data.lumiMask = '2017_mc_legacy_trigBits/crab_TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v/results/notFinishedLumis.json'
+	#config.Data.lumiMask = '2017_mc_legacy_trigBits/crab_DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017/results/notFinishedLumis.json'
+	#config.Data.lumiMask = '2017_mc_legacy_trigBits/crab_ZZTo4L_TuneCP5_13TeV-amcatnloFXFX-pythia8_RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realisti/results/notFinishedLumis.json'
+	#config.Data.lumiMask  = '2017_mc_legacy_trigBits/crab_WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8_RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_reali/results/notFinishedLumis.json'
+
 	#config.Data.unitsPerJob = 1
 
-	config.Data.unitsPerJob = 20000
+	config.Data.unitsPerJob = 22000
+	#config.Data.unitsPerJob = 2500
 
 	#config.Data.totalUnits = 500000
         #config.Data.totalUnits = 3
 
         config.Data.outputDatasetTag = None
         #config.Data.outLFNDirBase = '/store/user/%s/mc_legacy_gen_'+era+'/' % (getUsernameFromSiteDB())
-        config.Data.outLFNDirBase = '/store/user/%s/'% (getUsernameFromSiteDB()) + sampleType+'_legacy_gen_'+era+'/' 
+        #config.Data.outLFNDirBase = '/store/user/%s/'% (getUsernameFromSiteDB()) + sampleType+'_legacy_gen_'+era+'/' 
+        #config.Data.outLFNDirBase = '/store/group/lpchzg/corderom/'+ sampleType+'_'+era+'/'
+        config.Data.outLFNDirBase = '/store/group/lpchzg/corderom/'+ sampleType+'_'+era+'/trigBits/'
+
 
         config.Site.storageSite = 'T3_US_FNALLPC' # Choose your site. 
         #--------------------------------------------------------
@@ -118,55 +133,11 @@ def main():
         # Will submit one task for each of these input datasets.
         inputDatasets = [
 
-                            #'/SingleMuon/Run2016B-03Feb2017_ver2-v2/MINIAOD', 
-                            #'/SingleMuon/Run2016C-03Feb2017-v1/MINIAOD',
-                            #'/SingleMuon/Run2016D-03Feb2017-v1/MINIAOD',
-                            #'/SingleMuon/Run2016E-03Feb2017-v1/MINIAOD',
-                            #'/SingleMuon/Run2016F-03Feb2017-v1/MINIAOD',
-                            #'/SingleMuon/Run2016G-03Feb2017-v1/MINIAOD',
-                            #'/SingleMuon/Run2016H-03Feb2017_ver2-v1/MINIAOD',
-                            #'/SingleMuon/Run2016H-03Feb2017_ver3-v1/MINIAOD',
-
-                            #'/DoubleMuon/Run2016B-03Feb2017_ver2-v2/MINIAOD',
-                            #'/DoubleMuon/Run2016C-03Feb2017-v1/MINIAOD',
-                            #'/DoubleMuon/Run2016D-03Feb2017-v1/MINIAOD',
-                            #'/DoubleMuon/Run2016E-03Feb2017-v1/MINIAOD',
-                            #'/DoubleMuon/Run2016F-03Feb2017-v1/MINIAOD',
-                            #'/DoubleMuon/Run2016G-03Feb2017-v1/MINIAOD',
-                            #'/DoubleMuon/Run2016H-03Feb2017_ver2-v1/MINIAOD',
-                            #'/DoubleMuon/Run2016H-03Feb2017_ver3-v1/MINIAOD',
-                           
-                            #'/DoubleEG/Run2016B-03Feb2017_ver2-v2/MINIAOD',
-                            #'/DoubleEG/Run2016C-03Feb2017-v1/MINIAOD',
-                            #'/DoubleEG/Run2016D-03Feb2017-v1/MINIAOD',
-                            #'/DoubleEG/Run2016E-03Feb2017-v1/MINIAOD',
-                            #'/DoubleEG/Run2016F-03Feb2017-v1/MINIAOD',
-                            #'/DoubleEG/Run2016G-03Feb2017-v1/MINIAOD',
-                            #'/DoubleEG/Run2016H-03Feb2017_ver2-v1/MINIAOD',
-                            #'/DoubleEG/Run2016H-03Feb2017_ver3-v1/MINIAOD',
-
-                            #'/MuOnia/Run2016B-03Feb2017_ver2-v2/MINIAOD',
-                            #'/MuOnia/Run2016C-03Feb2017-v1/MINIAOD',
-                            #'/MuOnia/Run2016D-03Feb2017-v1/MINIAOD',
-                            #'/MuOnia/Run2016E-03Feb2017-v1/MINIAOD',
-                            #'/MuOnia/Run2016F-03Feb2017-v1/MINIAOD',
-                            #'/MuOnia/Run2016G-03Feb2017-v1/MINIAOD',
-                            #'/MuOnia/Run2016H-03Feb2017_ver2-v1/MINIAOD',
-                            #'/MuOnia/Run2016H-03Feb2017_ver3-v1/MINIAOD',
-                            
-                            #'/Charmonium/Run2016B-03Feb2017_ver2-v2/MINIAOD',
-                            #'/Charmonium/Run2016C-03Feb2017-v1/MINIAOD',
-                            #'/Charmonium/Run2016D-03Feb2017-v1/MINIAOD',
-                            #'/Charmonium/Run2016E-03Feb2017-v1/MINIAOD',
-                            #'/Charmonium/Run2016F-03Feb2017-v1/MINIAOD',
-                            #'/Charmonium/Run2016G-03Feb2017-v1/MINIAOD',
-                            #'/Charmonium/Run2016H-03Feb2017_ver2-v1/MINIAOD',
-                            #'/Charmonium/Run2016H-03Feb2017_ver3-v1/MINIAOD',
 
 			    ###############################
 			    ########## RERECO #############
-
 			    # '/ZGToLLG_01J_5f_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM',
+
 			    # '/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM',
 			    #'/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/MINIAODSIM',
 
@@ -192,30 +163,12 @@ def main():
 			    ######################################
 			    ##########  2016 LEGACY  #############
 
-			    ##------------------- Double Muon --------------
-			    #'/DoubleMuon/Run2016B-17Jul2018_ver1-v1/MINIAOD',
-			    #'/DoubleMuon/Run2016B-17Jul2018_ver2-v1/MINIAOD',
-			    #'/DoubleMuon/Run2016C-17Jul2018-v1/MINIAOD',
-			    #'/DoubleMuon/Run2016D-17Jul2018-v1/MINIAOD',
-			    #'/DoubleMuon/Run2016E-17Jul2018-v1/MINIAOD',
-			    #'/DoubleMuon/Run2016F-17Jul2018-v1/MINIAOD',
-			    #'/DoubleMuon/Run2016G-17Jul2018-v1/MINIAOD',
-			    #'/DoubleMuon/Run2016H-17Jul2018-v1/MINIAOD',
-       
-			    ##------------------ DoubleEG ------------------
-			    #'/DoubleEG/Run2016B-17Jul2018_ver1-v1/MINIAOD',
-			    #'/DoubleEG/Run2016B-17Jul2018_ver2-v1/MINIAOD',
-			    #'/DoubleEG/Run2016C-17Jul2018-v1/MINIAOD',
-			    #'/DoubleEG/Run2016D-17Jul2018-v1/MINIAOD',
-			    #'/DoubleEG/Run2016E-17Jul2018-v1/MINIAOD',
-			    #'/DoubleEG/Run2016F-17Jul2018-v1/MINIAOD',
-			    #'/DoubleEG/Run2016G-17Jul2018-v1/MINIAOD',
-			    #'/DoubleEG/Run2016H-17Jul2018-v1/MINIAOD',
 
 			    ##-------------------  ZG & DYJets   --------------
 			    #'/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3_ext2-v1/MINIAODSIM',
 			    #'/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3_ext2-v2/MINIAODSIM',
 			    #'/ZGToLLG_01J_5f_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v1/MINIAODSIM',
+                            #'/ZGToLLG_01J_LoosePtlPtg_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM',
 
 
 			    #'/WWTo2L2Nu_13TeV-powheg-herwigpp/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
@@ -236,25 +189,11 @@ def main():
 			    ######################################
 			    ##########  2017 LEGACY  #############
 
-			    ##------------------- Double Muon --------------
-			    '/DoubleMuon/Run2017B-31Mar2018-v1/MINIAOD',
-			    '/DoubleMuon/Run2017C-31Mar2018-v1/MINIAOD',
-			    '/DoubleMuon/Run2017D-31Mar2018-v1/MINIAOD',
-			    '/DoubleMuon/Run2017E-31Mar2018-v1/MINIAOD',
-			    '/DoubleMuon/Run2017F-31Mar2018-v1/MINIAOD',
- 
-			    ##------------------ DoubleEG ------------------
-			    #'/DoubleEG/Run2017B-31Mar2018-v1/MINIAOD',
-			    #'/DoubleEG/Run2017C-31Mar2018-v1/MINIAOD',
-			    #'/DoubleEG/Run2017D-31Mar2018-v1/MINIAOD',
-			    #'/DoubleEG/Run2017E-31Mar2018-v1/MINIAOD',
-			    #'/DoubleEG/Run2017F-31Mar2018-v1/MINIAOD',
-
 			    ##-------------------  ZG & DYJets   --------------
 			    #'/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM',
 			    #'/ZGToLLG_01J_LoosePtlPtg_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM',
 
-			    #'/WWTo2L2Nu_NNPDF31_TuneCP5Up_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM',
+			    #'/WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
 
 			    #'/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
 			    #'/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
@@ -263,8 +202,49 @@ def main():
 			    #'/ZZTo4L_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
 			    #'/ZZTo2L2Nu_13TeV_powheg_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
 
-			    #'/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM',
+			    '/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM',
 			    #'/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v2/MINIAODSIM',
+
+
+
+			    #'/GJet_Pt-15To6000_TuneCP5-Flat_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+
+
+			    #'/QCD_Pt_15to30_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v2/MINIAODSIM',
+			    #'/QCD_Pt_30to50_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v2/MINIAODSIM',
+			    #'/QCD_Pt_50to80_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v2/MINIAODSIM',
+			    #'/QCD_Pt_80to120_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v2/MINIAODSIM',
+			    #'/QCD_Pt_120to170_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+			    #'/QCD_Pt_170to300_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v2/MINIAODSIM',
+			    #'/QCD_Pt_300to470_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v3/MINIAODSIM',
+			    #'/QCD_Pt_470to600_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v3/MINIAODSIM',
+			    #'/QCD_Pt_600to800_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v2/MINIAODSIM',
+			    #'/QCD_Pt_800to1000_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v2/MINIAODSIM',
+			    #'/QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v2/MINIAODSIM',
+			    #'/QCD_Pt_1400to1800_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v3/MINIAODSIM',
+			    #'/QCD_Pt_1800to2400_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+			    #'/QCD_Pt_2400to3200_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_pilot_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+			    #'/QCD_Pt_3200toInf_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_second_pilot_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+
+                            ######################################
+                            ##########  2018 ReReco  #############
+
+                            '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext2-v1/MINIAODSIM',
+                            '/ZGToLLG_01J_LoosePtlPtg_5f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM',
+                            '/WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM',
+
+                            '/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM',
+                            '/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext1-v2/MINIAODSIM'
+
+                            '/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM',
+                            '/ZZTo4L_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM',
+                            '/ZZTo2L2Nu_TuneCP5_13TeV_powheg_pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext2-v2/MINIAODSIM',
+
+                            '/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM',
+                            '/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/MINIAODSIM',
+ 
+
+
                         ]
 
         for inDS in inputDatasets:
