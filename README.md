@@ -22,8 +22,8 @@ cmsrel CMSSW_10_2_13
 cd CMSSW_10_2_13/src
 cmsenv
 git cms-merge-topic cmantill:baconprod-10213-v15
-git clone -b jbueghly_prod git@github.com:NWUHEP/BaconProd
-git clone -b jbueghly_prod git@github.com:NWUHEP/BaconAna
+git clone -b jcordero_dev git@github.com:NWUHEP/BaconProd
+git clone -b jcordero_dev git@github.com:NWUHEP/BaconAna
 git cms-merge-topic cms-egamma:slava77-btvDictFix_10210
 git cms-addpkg EgammaAnalysis/ElectronTools
 rm -rf EgammaAnalysis/ElectronTools/data
