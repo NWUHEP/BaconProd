@@ -57,7 +57,7 @@ def main():
     #################################
     #reduced     = True
     reduced     = False
-    era         = '2017'
+    era         = '2018'
     isLocal     = 'False'
     isData      = 'True'
 
@@ -81,8 +81,7 @@ def main():
         config = config()
 
         config.General.requestName     = None
-        #config.General.workArea        = era+'_'+sampleType+'_legacy'
-        config.General.workArea        = era+'_'+sampleType+'_legacy_trigBits_resubmit'
+        config.General.workArea        = era+'_'+sampleType+'_trigBits_resubmit'
         config.General.transferOutputs = True
         config.General.transferLogs    = False
 
@@ -109,14 +108,12 @@ def main():
 	#config.Data.runRange = ''
 
 	#config.Data.lumiMask  = ''
-	#config.Data.lumiMask  = '2017_data_legacy_trigBits/crab_DoubleMuon_Run2017E-31Mar2018-v1/results/notFinishedLumis.json'
-	#config.Data.lumiMask  = '2017_data_legacy_trigBits/crab_DoubleMuon_Run2017F-31Mar2018-v1/results/notFinishedLumis.json'
-	#config.Data.lumiMask  = '2017_data_legacy_trigBits/crab_DoubleEG_Run2017F-31Mar2018-v1/results/notFinishedLumis.json'
-	config.Data.lumiMask  = '2017_data_legacy_trigBits/crab_DoubleEG_Run2017B-31Mar2018-v1/results/notFinishedLumis.json'
+	config.Data.lumiMask = "/uscms/home/corderom/nobackup/2018/CMSSW_10_2_18/src/BaconProd/Ntupler/crab/2018_data_trigBits/crab_EGamma_Run2018D-22Jan2019-v2/results/notFinishedLumis.json"
 
 	#config.Data.unitsPerJob = 1
 
-	config.Data.unitsPerJob = 20000
+	#config.Data.unitsPerJob = 20000
+	config.Data.unitsPerJob = 80000
 
 	#config.Data.totalUnits = 500000
         #config.Data.totalUnits = 3
@@ -211,7 +208,7 @@ def main():
 			    #'/DoubleMuon/Run2017F-31Mar2018-v1/MINIAOD',
  
 			    ##------------------ DoubleEG ------------------
-			    '/DoubleEG/Run2017B-31Mar2018-v1/MINIAOD',
+			    #'/DoubleEG/Run2017B-31Mar2018-v1/MINIAOD',
 			    #'/DoubleEG/Run2017C-31Mar2018-v1/MINIAOD',
 			    #'/DoubleEG/Run2017D-31Mar2018-v1/MINIAOD',
 			    #'/DoubleEG/Run2017E-31Mar2018-v1/MINIAOD',
@@ -234,16 +231,16 @@ def main():
                             ##########  2018 RECO  #############
 
                             ##------------------- Double Muon --------------
-                            '/DoubleMuon/Run2018A-17Sep2018-v2/MINIAOD',
-                            '/DoubleMuon/Run2018B-17Sep2018-v1/MINIAOD',
-                            '/DoubleMuon/Run2018C-17Sep2018-v1/MINIAOD',
-                            '/DoubleMuon/Run2018D-PromptReco-v2/MINIAOD',
+                            #'/DoubleMuon/Run2018A-17Sep2018-v2/MINIAOD',
+                            #'/DoubleMuon/Run2018B-17Sep2018-v1/MINIAOD',
+                            #'/DoubleMuon/Run2018C-17Sep2018-v1/MINIAOD',
+                            #'/DoubleMuon/Run2018D-PromptReco-v2/MINIAOD',
 
                             ##------------------ DoubleEG ------------------
                             #'/EGamma/Run2018A-17Sep2018-v2/MINIAOD',
                             #'/EGamma/Run2018B-17Sep2018-v1/MINIAOD',
                             #'/EGamma/Run2018C-17Sep2018-v1/MINIAOD',
-                            #'/EGamma/Run2018D-22Jan2019-v2/MINIAOD',
+                            '/EGamma/Run2018D-22Jan2019-v2/MINIAOD',
 
 
  

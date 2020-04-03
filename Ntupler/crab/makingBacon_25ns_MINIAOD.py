@@ -413,6 +413,12 @@ process.ntupler = cms.EDAnalyzer('NtuplerMod',
     ebReducedRecHitCollection = cms.InputTag("reducedEgamma","reducedEBRecHits"), 
     esReducedRecHitCollection = cms.InputTag("reducedEgamma","reducedESRecHits"),
 
+    # Added to get photon variables
+    phoChargedIsolationCollection       = cms.InputTag("photonIDValueMapProducer:phoChargedIsolation"),
+    phoPhotonIsolationCollection        = cms.InputTag("photonIDValueMapProducer:phoPhotonIsolation"),
+    phoNeutralHadronIsolationCollection = cms.InputTag("photonIDValueMapProducer:phoNeutralHadronIsolation"),
+    phoWorstChargeIsolationCollection   = cms.InputTag("photonIDValueMapProducer:phoWorstChargedIsolatio"),
+
     useTriggerObject      = cms.untracked.bool(False),
   ),
   

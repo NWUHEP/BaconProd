@@ -48,6 +48,12 @@ FillerPhoton::FillerPhoton(const edm::ParameterSet &iConfig, const bool useAOD,e
   fesReducedRecHitCollection          (iConfig.getParameter<edm::InputTag>("esReducedRecHitCollection")),
   febReducedRecHitCollection          (iConfig.getParameter<edm::InputTag>("ebReducedRecHitCollection")),
 
+  fphotonChargedIsolationCollection         (iConfig.getParameter<edm::InputTag>("phoChargedIsolationCollection")),
+  fphotonPhotonIsolationCollection          (iConfig.getParameter<edm::InputTag>("phoPhotonIsolationCollection")),
+  fphotonNeutralHadronIsolationCollection   (iConfig.getParameter<edm::InputTag>("phoNeutralHadronIsolationCollection")),
+  fphotonWorstChargeIsolationCollection     (iConfig.getParameter<edm::InputTag>("phoWorstChargeIsolationCollection")),
+
+
   fUseTO             (iConfig.getUntrackedParameter<bool>("useTriggerObject",false)),
   fUseAOD            (useAOD)
 {
@@ -63,6 +69,11 @@ FillerPhoton::FillerPhoton(const edm::ParameterSet &iConfig, const bool useAOD,e
   fTokeeReducedRecHitCollection  =  iC.consumes<EcalRecHitCollection>(feeReducedRecHitCollection);
   fTokesReducedRecHitCollection  =  iC.consumes<EcalRecHitCollection>(fesReducedRecHitCollection);
   fTokebReducedRecHitCollection  =  iC.consumes<EcalRecHitCollection>(febReducedRecHitCollection);
+
+  fTokphotonChargedIsolationCollection       =  iC.consumes<edm::ValueMap<float>>(fphotonChargedIsolationCollection);
+  fTokphotonPhotonIsolationCollection        =  iC.consumes<edm::ValueMap<float>>(fphotonPhotonIsolationCollection);
+  fTokphotonNeutralHadronIsolationCollection =  iC.consumes<edm::ValueMap<float>>(fphotonNeutralHadronIsolationCollection);
+  fTokphotonWorstChargeIsolationCollection   =  iC.consumes<edm::ValueMap<float>>(fphotonWorstChargeIsolationCollection);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -118,6 +129,22 @@ void FillerPhoton::fill(TClonesArray *array,
   assert(hSCProduct.isValid());
   const reco::SuperClusterCollection *scCol = hSCProduct.product();
 
+  
+  //edm::Handle<edm::View<pat::Photon> > photonHandle;
+  //iEvent.getByToken(fPhotonName, photonHandle);
+  edm::Handle<edm::View<pat::PhotonCollection>> handlePhoton;
+  iEvent.getByToken(fTokPatPhotonName,handlePhoton);
+  assert(handlePhoton.isValid());
+
+  edm::Handle<edm::ValueMap<float> > phoChargedIsolationMap;
+  edm::Handle<edm::ValueMap<float> > phoNeutralHadronIsolationMap;
+  edm::Handle<edm::ValueMap<float> > phoPhotonIsolationMap;
+  edm::Handle<edm::ValueMap<float> > phoWorstChargedIsolationMap;
+
+  iEvent.getByToken(fTokphotonChargedIsolationCollection      , phoChargedIsolationMap      );
+  iEvent.getByToken(fTokphotonPhotonIsolationCollection       , phoNeutralHadronIsolationMap);
+  iEvent.getByToken(fTokphotonNeutralHadronIsolationCollection, phoPhotonIsolationMap       );
+  iEvent.getByToken(fTokphotonWorstChargeIsolationCollection  , phoWorstChargedIsolationMap );
   //-------------------------------------------------------------
   //--------------------Added by Joseph Cordero -----------------
   // Get ebEcalHit Collection
@@ -149,7 +176,10 @@ void FillerPhoton::fill(TClonesArray *array,
   EcalClusterLazyTools       lazyTool    (iEvent, iSetup, fTokebReducedRecHitCollection, fTokeeReducedRecHitCollection, fTokesReducedRecHitCollection);
   noZS::EcalClusterLazyTools lazyToolnoZS(iEvent, iSetup, fTokebReducedRecHitCollection, fTokeeReducedRecHitCollection, fTokesReducedRecHitCollection);
 
+  unsigned int nPhoton;
   for(reco::PhotonCollection::const_iterator itPho = photonCol->begin(); itPho!=photonCol->end(); ++itPho) {
+    nPhoton = itPho - photonCol->begin();
+
     // Photon cuts
     if(itPho->pt() < fMinPt) continue;
     
@@ -214,6 +244,31 @@ void FillerPhoton::fill(TClonesArray *array,
     pPhoton->scRawE     = sc->rawEnergy();
     pPhoton->scESEn     = sc->preshowerEnergy();
 
+
+    //const auto pho =  hPhotonProduct->ptrAt(nPhoton);
+    //const auto pho =  photonCol->ptrAt(nPhoton);
+    //const auto pho =  handlePhoton->ptrAt(nPhoton);
+
+    //reco::PhotonRef photonRef(itPho,nPhoton);
+    std::cout << "------------Reco-------- REFERENCES ----------Reco----------" << std::endl;
+    edm::Ref<reco::PhotonCollection> photonRef(hPhotonProduct, nPhoton);
+    //const auto pho = phoBaseRef;
+    
+    //edm::Handle<pat::Photon> hPhoton;
+    //iEvent.getByToken(fTokPatPhotonName,hPhoton);
+    //edm::Ref<pat::Photon> photonRef(hPhoton, nPhoton);
+    const auto pho = photonRef;
+
+    pPhoton->phoChIso      =  (*phoChargedIsolationMap      )[pho]; 
+    pPhoton->phoNeuHadIso  =  (*phoNeutralHadronIsolationMap)[pho]; 
+    pPhoton->phoPhIso      =  (*phoPhotonIsolationMap       )[pho]; 
+    pPhoton->phoWorstChIso =  (*phoWorstChargedIsolationMap )[pho]; 
+
+    std::cout << " phoChIso      :: " << pPhoton->phoChIso      << std::endl  
+              << " phoNeuHadIso  :: " << pPhoton->phoNeuHadIso  << std::endl
+              << " phoPhIso      :: " << pPhoton->phoPhIso      << std::endl
+              << " phoWorstChISo :: " << pPhoton->phoWorstChIso << std::endl;
+
     std::vector<float> vCov = lazyToolnoZS.localCovariances(*(sc->seed()));
     const float spp = (isnan(vCov[2]) ? 0. : sqrt(vCov[2]));
     const float sep = vCov[1];
@@ -252,6 +307,8 @@ void FillerPhoton::fill(TClonesArray *array,
     pPhoton->passElectronVeto = !(pPhoton->isConv); // here for backwards compatibility
  
     if(fUseTO) pPhoton->hltMatchBits = TriggerTools::matchHLT(pPhoton->eta, pPhoton->phi, triggerRecords, triggerEvent);
+
+
   }
 }
 
@@ -275,19 +332,21 @@ void FillerPhoton::fill(TClonesArray *array,
   assert(hSCProduct.isValid());
   const reco::SuperClusterCollection *scCol = hSCProduct.product();
 
-  /*
-  edm::Handle<edm::ValueMap<float> > hChHadIsoMap;
-  iEvent.getByToken(fTokChHadIsoMapTag, hChHadIsoMap);
-  assert(hChHadIsoMap.isValid());
 
-  edm::Handle<edm::ValueMap<float> > hNeuHadIsoMap;
-  iEvent.getByToken(fTokNeuHadIsoMapTag, hNeuHadIsoMap);
-  assert(hNeuHadIsoMap.isValid());
 
-  edm::Handle<edm::ValueMap<float> > hGammaIsoMap;
-  iEvent.getByToken(fTokGammaIsoMapTag, hGammaIsoMap);
-  assert(hGammaIsoMap.isValid());
-  */
+  edm::Handle<edm::View<pat::PhotonCollection>> handlePhoton;
+  iEvent.getByToken(fTokPatPhotonName,handlePhoton);
+  assert(handlePhoton.isValid());
+
+  edm::Handle<edm::ValueMap<float> > phoChargedIsolationMap;
+  edm::Handle<edm::ValueMap<float> > phoNeutralHadronIsolationMap;
+  edm::Handle<edm::ValueMap<float> > phoPhotonIsolationMap;
+  edm::Handle<edm::ValueMap<float> > phoWorstChargedIsolationMap;
+
+  iEvent.getByToken(fTokphotonChargedIsolationCollection      , phoChargedIsolationMap      );
+  iEvent.getByToken(fTokphotonPhotonIsolationCollection       , phoNeutralHadronIsolationMap);
+  iEvent.getByToken(fTokphotonNeutralHadronIsolationCollection, phoPhotonIsolationMap       );
+  iEvent.getByToken(fTokphotonWorstChargeIsolationCollection  , phoWorstChargedIsolationMap );
 
  
   //EcalClusterLazyTools       lazyTool    (iEvent, iSetup, ebReducedRecHitCollection_, eeReducedRecHitCollection_, esReducedRecHitCollection_);
@@ -298,7 +357,12 @@ void FillerPhoton::fill(TClonesArray *array,
   EcalClusterLazyTools       lazyTool    (iEvent, iSetup, fTokebReducedRecHitCollection, fTokeeReducedRecHitCollection, fTokesReducedRecHitCollection);
   noZS::EcalClusterLazyTools lazyToolnoZS(iEvent, iSetup, fTokebReducedRecHitCollection, fTokeeReducedRecHitCollection, fTokesReducedRecHitCollection)
 ;
+  unsigned int nPhoton;
+  //for(unsigned int nPhoton = 0; nPhoton < photonCol->size(); ++nPhoton) {
+    //pat::PhotonCollection& itPho = (* photonCol)[i]
+
   for(pat::PhotonCollection::const_iterator itPho = photonCol->begin(); itPho!=photonCol->end(); ++itPho) {
+    nPhoton = itPho-photonCol->begin();
 
     // Photon cuts
     if(itPho->pt() < fMinPt) continue;
@@ -384,6 +448,33 @@ void FillerPhoton::fill(TClonesArray *array,
     pPhoton->scRawE     = sc->rawEnergy();
     pPhoton->scESEn     = sc->preshowerEnergy();
 
+
+
+    //const auto pho =  handlePhoton->ptrAt(nPhoton);
+    //const auto pho =  photonCol->ptrAt(nPhoton);
+
+    //std::cout << " Index to map :: " <<  pho << std::endl;
+
+    //reco::PhotonRef photonRef(itPho,nPhoton);
+    std::cout << "------------PAT---------- REFERENCES ---------PAT-----------" << phoBaseRef << std::endl;
+    edm::Ref<pat::PhotonCollection> photonRef(hPhotonProduct, nPhoton);
+
+    //edm::Handle<pat::Photon> hPhoton;
+    //iEvent.getByToken(fTokPatPhotonName,hPhoton);
+    //edm::Ref<pat::Photon> photonRef(hPhoton, nPhoton);
+    const auto pho = photonRef;
+    //const auto pho = phoBaseRef;
+
+    pPhoton->phoChIso      =  (*phoChargedIsolationMap      )[pho]; 
+    pPhoton->phoNeuHadIso  =  (*phoNeutralHadronIsolationMap)[pho]; 
+    pPhoton->phoPhIso      =  (*phoPhotonIsolationMap       )[pho]; 
+    pPhoton->phoWorstChIso =  (*phoWorstChargedIsolationMap )[pho]; 
+
+    std::cout << " phoChIso      :: " << pPhoton->phoChIso      << std::endl  
+              << " phoNeuHadIso  :: " << pPhoton->phoNeuHadIso  << std::endl
+              << " phoPhIso      :: " << pPhoton->phoPhIso      << std::endl
+              << " phoWorstChISo :: " << pPhoton->phoWorstChIso << std::endl;
+
     std::vector<float> vCov = lazyToolnoZS.localCovariances(*(sc->seed()));
     const float spp = (isnan(vCov[2]) ? 0. : sqrt(vCov[2]));
     const float sep = vCov[1];
@@ -437,6 +528,7 @@ void FillerPhoton::fill(TClonesArray *array,
     pPhoton->mvaFall17V2Cat = itPho->userInt(fMVAFall17V2+"Categories");
 
     if(fUseTO) pPhoton->hltMatchBits = TriggerTools::matchHLT(pPhoton->eta, pPhoton->phi, triggerRecords, triggerObjects);
+
   }
 }
 /*

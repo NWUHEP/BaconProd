@@ -24,6 +24,7 @@
 
 #include "DataFormats/RecoCandidate/interface/RecoEcalCandidate.h"
 #include "RecoEcal/EgammaCoreTools/interface/EcalClusterLazyTools.h"
+#include "HiggsAnalysis/HiggsTo2photons/interface/CiCPhotonID.h"
 #include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
 
 
@@ -89,6 +90,11 @@ namespace baconhep
       edm::EDGetTokenT<EcalRecHitCollection> fTokeeReducedRecHitCollection;
       edm::EDGetTokenT<EcalRecHitCollection> fTokesReducedRecHitCollection;
 
+      edm::EDGetTokenT<edm::ValueMap<float>> fTokphotonChargedIsolationCollection;
+      edm::EDGetTokenT<edm::ValueMap<float>> fTokphotonPhotonIsolationCollection; 
+      edm::EDGetTokenT<edm::ValueMap<float>> fTokphotonNeutralHadronIsolationCollection;
+      edm::EDGetTokenT<edm::ValueMap<float>> fTokphotonWorstChargeIsolationCollection;
+
       std::string fMVASpring16;
       std::string fMVAFall17V1;
       std::string fMVAFall17V2;
@@ -97,8 +103,14 @@ namespace baconhep
       edm::InputTag fesReducedRecHitCollection;
       edm::InputTag febReducedRecHitCollection;
 
+      edm::InputTag fphotonChargedIsolationCollection;
+      edm::InputTag fphotonPhotonIsolationCollection;
+      edm::InputTag fphotonNeutralHadronIsolationCollection;
+      edm::InputTag fphotonWorstChargeIsolationCollection;
+
       bool fUseTO;
       bool fUseAOD;
+
   };
 }
 #endif
