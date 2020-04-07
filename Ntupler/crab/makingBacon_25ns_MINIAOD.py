@@ -409,15 +409,16 @@ process.ntupler = cms.EDAnalyzer('NtuplerMod',
     edmPhoMVAFall17V1     = cms.untracked.string('PhotonMVAEstimatorRunIIFall17v1'),
     edmPhoMVAFall17V2     = cms.untracked.string('PhotonMVAEstimatorRunIIFall17v2'),
 
+    # Added to get photon showershape variables
     eeReducedRecHitCollection = cms.InputTag("reducedEgamma","reducedEERecHits"), 
     ebReducedRecHitCollection = cms.InputTag("reducedEgamma","reducedEBRecHits"), 
     esReducedRecHitCollection = cms.InputTag("reducedEgamma","reducedESRecHits"),
 
-    # Added to get photon variables
+    # Added to get photon isolation variables
     phoChargedIsolationCollection       = cms.InputTag("photonIDValueMapProducer:phoChargedIsolation"),
     phoPhotonIsolationCollection        = cms.InputTag("photonIDValueMapProducer:phoPhotonIsolation"),
     phoNeutralHadronIsolationCollection = cms.InputTag("photonIDValueMapProducer:phoNeutralHadronIsolation"),
-    phoWorstChargeIsolationCollection   = cms.InputTag("photonIDValueMapProducer:phoWorstChargedIsolatio"),
+    phoWorstChargeIsolationCollection   = cms.InputTag("photonIDValueMapProducer:phoWorstChargedIsolation"),
 
     useTriggerObject      = cms.untracked.bool(False),
   ),

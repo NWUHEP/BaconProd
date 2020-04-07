@@ -244,30 +244,10 @@ void FillerPhoton::fill(TClonesArray *array,
     pPhoton->scRawE     = sc->rawEnergy();
     pPhoton->scESEn     = sc->preshowerEnergy();
 
-
-    //const auto pho =  hPhotonProduct->ptrAt(nPhoton);
-    //const auto pho =  photonCol->ptrAt(nPhoton);
-    //const auto pho =  handlePhoton->ptrAt(nPhoton);
-
-    //reco::PhotonRef photonRef(itPho,nPhoton);
-    std::cout << "------------Reco-------- REFERENCES ----------Reco----------" << std::endl;
-    edm::Ref<reco::PhotonCollection> photonRef(hPhotonProduct, nPhoton);
-    //const auto pho = phoBaseRef;
-    
-    //edm::Handle<pat::Photon> hPhoton;
-    //iEvent.getByToken(fTokPatPhotonName,hPhoton);
-    //edm::Ref<pat::Photon> photonRef(hPhoton, nPhoton);
-    const auto pho = photonRef;
-
-    pPhoton->phoChIso      =  (*phoChargedIsolationMap      )[pho]; 
-    pPhoton->phoNeuHadIso  =  (*phoNeutralHadronIsolationMap)[pho]; 
-    pPhoton->phoPhIso      =  (*phoPhotonIsolationMap       )[pho]; 
-    pPhoton->phoWorstChIso =  (*phoWorstChargedIsolationMap )[pho]; 
-
-    std::cout << " phoChIso      :: " << pPhoton->phoChIso      << std::endl  
-              << " phoNeuHadIso  :: " << pPhoton->phoNeuHadIso  << std::endl
-              << " phoPhIso      :: " << pPhoton->phoPhIso      << std::endl
-              << " phoWorstChISo :: " << pPhoton->phoWorstChIso << std::endl;
+    pPhoton->phoChIso      =  (phoChargedIsolationMap->begin()      )[nPhoton]; 
+    pPhoton->phoNeuHadIso  =  (phoNeutralHadronIsolationMap->begin())[nPhoton]; 
+    pPhoton->phoPhIso      =  (phoPhotonIsolationMap->begin()       )[nPhoton]; 
+    pPhoton->phoWorstChIso =  (phoWorstChargedIsolationMap->begin() )[nPhoton];
 
     std::vector<float> vCov = lazyToolnoZS.localCovariances(*(sc->seed()));
     const float spp = (isnan(vCov[2]) ? 0. : sqrt(vCov[2]));
@@ -377,7 +357,7 @@ void FillerPhoton::fill(TClonesArray *array,
     const reco::SuperClusterRef sc = itPho->superCluster();
 
     // ref to access value maps
-    edm::RefToBase<reco::Photon> phoBaseRef( edm::Ref<pat::PhotonCollection>(hPhotonProduct, itPho - photonCol->begin()) );
+    edm::RefToBase<pat::Photon> phoBaseRef( edm::Ref<pat::PhotonCollection>(hPhotonProduct, itPho - photonCol->begin()) );
 
 
     //
@@ -448,32 +428,10 @@ void FillerPhoton::fill(TClonesArray *array,
     pPhoton->scRawE     = sc->rawEnergy();
     pPhoton->scESEn     = sc->preshowerEnergy();
 
-
-
-    //const auto pho =  handlePhoton->ptrAt(nPhoton);
-    //const auto pho =  photonCol->ptrAt(nPhoton);
-
-    //std::cout << " Index to map :: " <<  pho << std::endl;
-
-    //reco::PhotonRef photonRef(itPho,nPhoton);
-    std::cout << "------------PAT---------- REFERENCES ---------PAT-----------" << phoBaseRef << std::endl;
-    edm::Ref<pat::PhotonCollection> photonRef(hPhotonProduct, nPhoton);
-
-    //edm::Handle<pat::Photon> hPhoton;
-    //iEvent.getByToken(fTokPatPhotonName,hPhoton);
-    //edm::Ref<pat::Photon> photonRef(hPhoton, nPhoton);
-    const auto pho = photonRef;
-    //const auto pho = phoBaseRef;
-
-    pPhoton->phoChIso      =  (*phoChargedIsolationMap      )[pho]; 
-    pPhoton->phoNeuHadIso  =  (*phoNeutralHadronIsolationMap)[pho]; 
-    pPhoton->phoPhIso      =  (*phoPhotonIsolationMap       )[pho]; 
-    pPhoton->phoWorstChIso =  (*phoWorstChargedIsolationMap )[pho]; 
-
-    std::cout << " phoChIso      :: " << pPhoton->phoChIso      << std::endl  
-              << " phoNeuHadIso  :: " << pPhoton->phoNeuHadIso  << std::endl
-              << " phoPhIso      :: " << pPhoton->phoPhIso      << std::endl
-              << " phoWorstChISo :: " << pPhoton->phoWorstChIso << std::endl;
+    pPhoton->phoChIso      =  (phoChargedIsolationMap->begin()      )[nPhoton]; 
+    pPhoton->phoNeuHadIso  =  (phoNeutralHadronIsolationMap->begin())[nPhoton]; 
+    pPhoton->phoPhIso      =  (phoPhotonIsolationMap->begin()       )[nPhoton]; 
+    pPhoton->phoWorstChIso =  (phoWorstChargedIsolationMap->begin() )[nPhoton]; 
 
     std::vector<float> vCov = lazyToolnoZS.localCovariances(*(sc->seed()));
     const float spp = (isnan(vCov[2]) ? 0. : sqrt(vCov[2]));

@@ -238,7 +238,7 @@ if options.doAlpaca:
 #--------------------------------------------------------------------------------
 # input settings
 #================================================================================
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(50) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(300) )
 
 if options.era == '2016':
     if options.isData:
@@ -392,7 +392,7 @@ process.ntupler = cms.EDAnalyzer('NtuplerMod',
     phoChargedIsolationCollection       = cms.InputTag("photonIDValueMapProducer:phoChargedIsolation"),
     phoNeutralHadronIsolationCollection = cms.InputTag("photonIDValueMapProducer:phoNeutralHadronIsolation"),
     phoPhotonIsolationCollection        = cms.InputTag("photonIDValueMapProducer:phoPhotonIsolation"),
-    phoWorstChargeIsolationCollection   = cms.InputTag("photonIDValueMapProducer:phoWorstChargedIsolatio"),
+    phoWorstChargeIsolationCollection   = cms.InputTag("photonIDValueMapProducer:phoWorstChargedIsolation"),
 
     useTriggerObject      = cms.untracked.bool(False),
   ),
