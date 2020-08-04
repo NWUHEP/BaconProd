@@ -806,7 +806,7 @@ void FillerJet::fill(TClonesArray *array, TClonesArray *iExtraArray,TClonesArray
       jetcorr = jetCorr->correction(*itJet);
     }	
     // jet pT cut (BOTH raw AND corrected pT must exceed threshold)
-    if(ptRaw*jetcorr < fMinPt || ptRaw < fMinPt) continue;
+    //if(ptRaw*jetcorr < fMinPt || ptRaw < fMinPt) continue;
     fJetUnc->setJetPt ( ptRaw*jetcorr  );
     fJetUnc->setJetEta( itJet->eta() );
     double jetunc = fJetUnc->getUncertainty(true);
