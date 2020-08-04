@@ -3,7 +3,7 @@ BaconProd
 
 Branch for producting bacon ntuples for 2016-2018 data and MC. 
 
- * runs on CMS LPC
+ * runs on CMS LPC SL7
  * uses CMSSW\_10\_2\_13
  * depends on NWUHEP/BaconAna jbueghly\_prod branch
 
@@ -17,7 +17,6 @@ Setup
 
 ```Shell
 source /cvmfs/cms.cern.ch/cmsset_default.sh
-export SCRAM_ARCH=slc6_amd64_gcc700
 cmsrel CMSSW_10_2_13
 cd CMSSW_10_2_13/src
 cmsenv
