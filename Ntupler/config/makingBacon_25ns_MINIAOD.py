@@ -33,11 +33,6 @@ options.register('era',
                  vp.VarParsing.varType.string, 
                  )
 
-options.register('isLocal',
-                 'False', # default value
-                 vp.VarParsing.multiplicity.singleton,
-                 vp.VarParsing.varType.bool, 
-                 )
 # user input values
 options.parseArguments()
 
@@ -80,16 +75,8 @@ elif options.era == '2018D':
 
 from BaconProd.Ntupler.myJecFromDB_cff    import setupJEC
 setupJEC(process,options.isData,JECTag)
-if options.isData:
-	if options.isLocal:
-		process.jec.connect = cms.string('sqlite_file:/uscms/home/corderom/nobackup/2016/CMSSW_10_2_13/src/BaconProd/Utils/data/'+JECTag+'.db')
-	else:
-		process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
-else:
-  	if options.isLocal:
-		process.jec.connect = cms.string('sqlite_file:/uscms/home/corderom/nobackup/2016/CMSSW_10_2_13/src/BaconProd/Utils/data/'+JECTag+'.db')
-	else:
-  		process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
+process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
+
 #--------------------------------------------------------------------------------
 # Import of standard configurations
 #================================================================================
