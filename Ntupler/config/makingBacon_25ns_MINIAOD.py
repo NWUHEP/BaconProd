@@ -62,9 +62,17 @@ elif options.era == '2017':
       process.GlobalTag.globaltag = cms.string('94X_mc2017_realistic_v17')
       JECTag='Fall17_17Nov2017_V32_102X_MC'
 
-elif options.era == '2018':
+elif options.era == '2018ABC':
     if options.isData:
-      process.GlobalTag.globaltag = cms.string('102X_dataRun2_Sep2018ABC_v2')
+      process.GlobalTag.globaltag = cms.string('102X_dataRun2_v11')
+      JECTag='Fall17_17Nov2017_V32_102X_DATA'
+    else:
+      process.GlobalTag.globaltag = cms.string('102X_upgrade2018_realistic_v18')
+      JECTag='Fall17_17Nov2017_V32_102X_MC'
+
+elif options.era == '2018D':
+    if options.isData:
+      process.GlobalTag.globaltag = cms.string('102X_dataRun2_Prompt_v14')
       JECTag='Fall17_17Nov2017_V32_102X_DATA'
     else:
       process.GlobalTag.globaltag = cms.string('102X_upgrade2018_realistic_v18')
@@ -91,7 +99,7 @@ process.load('Configuration/StandardSequences/MagneticField_38T_cff')
 
 process.load('TrackingTools/TransientTrack/TransientTrackBuilder_cfi')
 
-if options.era == '2017' or options.era == '2018':
+if options.era == '2017' or options.era == '2018ABC' or options.era == '2018D':
     process.load('RecoBTag.SoftLepton.SoftLeptonByMVAComputers_cff')
 
 process.pfNoPileUpJME = cms.EDFilter("CandPtrSelector", src = cms.InputTag("packedPFCandidates"), cut = cms.string("fromPV"))
@@ -181,7 +189,7 @@ elif options.era == '2017':
                            era='2017-Nov17ReReco', #era is new to select between 2016 / 2017,  it defaults to 2017
                            phoIDModules=[]) #bug with default modules for photon VID; off for now
 
-elif options.era == '2018':
+elif options.era == '2018ABC' or options.era == '2018D':
     setupEgammaPostRecoSeq(process,
                            runVID=True,
                            era='2018-Prompt', #era is new to select between 2016 / 2017,  it defaults to 2017
@@ -194,7 +202,7 @@ if options.era == '2016':
         UseJetEMPt = cms.bool(False),
         PrefiringRateSystematicUncty = cms.double(0.2),
         SkipWarnings = False)
-elif options.era == '2017' or options.era=='2018':
+elif options.era == '2017' or options.era == '2018ABC' or options.era == '2018D':
     process.prefiringweight = l1ECALPrefiringWeightProducer.clone(
         DataEra = cms.string("2017BtoF"), 
         UseJetEMPt = cms.bool(False),
@@ -261,7 +269,6 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(50) )
 
 if options.era == '2016':
     if options.isData:
-        #test_file = cms.untracked.vstring('/store/data/Run2016C/DoubleEG/MINIAOD/03Feb2017-v1/810000/D8A12591-5DED-E611-BAF8-02163E019C24.root')
         test_file = cms.untracked.vstring('/store/data/Run2016E/DoubleMuon/MINIAOD/17Jul2018-v1/40000/06B5B1FE-818C-E811-A064-E0071B7A9810.root')
     else:
         test_file = cms.untracked.vstring('/store/mc/RunIISummer16MiniAODv2/GluGluHToZG_M-125_13TeV_powheg_pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/50000/702BC677-2AC8-E611-A5B3-02163E011463.root')
@@ -269,16 +276,19 @@ elif options.era == '2017':
     if options.isData:
         test_file = cms.untracked.vstring('/store/data/Run2017F/DoubleEG/MINIAOD/31Mar2018-v1/90001/F61EA338-8E37-E811-A203-0025905C4262.root')
     else:
-        #test_file = cms.untracked.vstring('/store/mc/RunIIFall17MiniAOD/QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8/MINIAODSIM/94X_mc2017_realistic_v10-v1/20000/46FB5EDE-F708-E811-A50F-0025905C53A4.root')
         test_file = cms.untracked.vstring('/store/mc/RunIIFall17MiniAOD/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/94X_mc2017_realistic_v10-v1/00000/005DC030-D3F4-E711-889A-02163E01A62D.root')
-elif options.era == '2018':
+elif options.era == '2018ABC':
     if options.isData:
         test_file = cms.untracked.vstring('/store/data/Run2018A/DoubleMuon/MINIAOD/17Sep2018-v2/00000/0DFD591F-DB0C-F447-9FBF-BAC1BF96D9B1.root')
     else:
         test_file = cms.untracked.vstring('/store/mc/RunIIAutumn18MiniAOD/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v1/90000/F6F754E3-9026-CC48-9018-FFBB087DADA5.root')
+elif options.era == '2018D':
+    if options.isData:
+        test_file = cms.untracked.vstring('/store/data/Run2018D/DoubleMuon/MINIAOD/PromptReco-v2/000/325/175/00000/ACD8ED9B-F9B0-AE44-B0FD-E20DAB363018.root')
+    else:
+        test_file = cms.untracked.vstring('/store/mc/RunIIAutumn18MiniAOD/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v1/90000/F6F754E3-9026-CC48-9018-FFBB087DADA5.root')
 
 process.source = cms.Source("PoolSource",
-                            #fileNames = cms.untracked.vstring('/store/mc/RunIISummer16MiniAODv2/GluGluHToZG_M-125_13TeV_powheg_pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/50000/702BC677-2AC8-E611-A5B3-02163E011463.root')
                             fileNames = test_file
                             )
 process.source.inputCommands = cms.untracked.vstring("keep *",
@@ -830,7 +840,7 @@ process.ntupler = cms.EDAnalyzer('NtuplerMod',
   ),
   
   PFCand = cms.untracked.PSet(
-    isActive       = cms.untracked.bool(False),
+    isActive       = cms.untracked.bool(True),
     edmName        = cms.untracked.string('packedPFCandidates'),
     edmPVName      = cms.untracked.string('offlineSlimmedPrimaryVertices'),
     doAddDepthTime = cms.untracked.bool(False)
@@ -838,7 +848,7 @@ process.ntupler = cms.EDAnalyzer('NtuplerMod',
 )
 
 # overwrite parameters for different eras 
-if options.era == '2017' or options.era == '2018':
+if options.era == '2017' or options.era == '2018ABC' or options.era == '2018D':
     process.ntupler.TriggerObject = cms.untracked.string("slimmedPatTrigger")
 
     #electron
@@ -956,7 +966,7 @@ else:
                                              process.selectedUpdatedPatJets*
                                              process.QGTagger              *
                                              process.ntupler)
-    elif options.era == '2017' or options.era == '2018':
+    elif options.era == '2017' or options.era == '2018ABC' or options.era == '2018D':
         process.baconSequence = cms.Sequence(
                                              process.BadPFMuonFilter          *
                                              process.BadChargedCandidateFilter*

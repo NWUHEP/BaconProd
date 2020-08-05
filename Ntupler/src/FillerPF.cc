@@ -182,6 +182,8 @@ void FillerPF::fillMiniAOD(TClonesArray *array,TClonesArray *iVtxCol,
   TClonesArray &rArray = *array;
   int pId = 0; 
   for(pat::PackedCandidateCollection::const_iterator itPF = PFCol->begin(); itPF!=PFCol->end(); itPF++) {
+    if ((itPF->pt() < 1.5) || fabs(itPF->eta()) > 2.5) continue;
+    if (itPF->pdgId() != 22) continue;
     pId++;
     // construct object and place in array
     //assert(rArray.GetEntries() < rArray.GetSize());
@@ -199,6 +201,33 @@ void FillerPF::fillMiniAOD(TClonesArray *array,TClonesArray *iVtxCol,
     pPF->e       = itPF->energy();
     pPF->q       = itPF->charge();
     pPF->pfType  = itPF->pdgId();
+
+    // iso variables
+    float chiso = 0;
+    float phoiso = 0;
+    float neuiso = 0;
+    float dR = 0;
+    for (pat::PackedCandidateCollection::const_iterator itPF2 = PFCol->begin(); itPF2!=PFCol->end(); itPF2++) {
+        if (fabs(itPF2->pdgId()) == 211 && itPF2->pt() > 0.2) {
+            dR = reco::deltaR(itPF->p4(), itPF2->p4());
+            if (dR < 0.3 && dR > 0.0001) chiso += itPF2->pt();
+        }
+        
+        if (fabs(itPF2->pdgId()) == 22 && itPF2->pt() > 0.5) {
+            dR = reco::deltaR(itPF->p4(), itPF2->p4());
+            if (dR < 0.3 && dR > 0.01) phoiso += itPF2->pt();
+        }
+        
+        if (fabs(itPF2->pdgId()) == 130 && itPF2->pt() > 0.5) {
+            dR = reco::deltaR(itPF->p4(), itPF2->p4());
+            if (dR < 0.3 && dR > 0.01) neuiso += itPF2->pt();
+        }
+    }
+
+    pPF->chHadIso03 = chiso;
+    pPF->gammaIso03 = phoiso;
+    pPF->neuHadIso03 = neuiso;
+
     if (itPF->hasTrackDetails()) {
       pPF->vtxChi2 = itPF->vertexChi2();
       pPF->pup     = itPF->puppiWeight();

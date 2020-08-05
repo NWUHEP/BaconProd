@@ -33,6 +33,11 @@ options.register('era',
                  vp.VarParsing.varType.string, 
                  )
 
+options.register('isLocal',
+                 'False', # default value
+                 vp.VarParsing.multiplicity.singleton,
+                 vp.VarParsing.varType.bool, 
+                 )
 # user input values
 options.parseArguments()
 
@@ -57,9 +62,17 @@ elif options.era == '2017':
       process.GlobalTag.globaltag = cms.string('94X_mc2017_realistic_v17')
       JECTag='Fall17_17Nov2017_V32_102X_MC'
 
-elif options.era == '2018':
+elif options.era == '2018ABC':
     if options.isData:
-      process.GlobalTag.globaltag = cms.string('102X_dataRun2_Sep2018ABC_v2')
+      process.GlobalTag.globaltag = cms.string('102X_dataRun2_v11')
+      JECTag='Fall17_17Nov2017_V32_102X_DATA'
+    else:
+      process.GlobalTag.globaltag = cms.string('102X_upgrade2018_realistic_v18')
+      JECTag='Fall17_17Nov2017_V32_102X_MC'
+
+elif options.era == '2018D':
+    if options.isData:
+      process.GlobalTag.globaltag = cms.string('102X_dataRun2_Prompt_v14')
       JECTag='Fall17_17Nov2017_V32_102X_DATA'
     else:
       process.GlobalTag.globaltag = cms.string('102X_upgrade2018_realistic_v18')
@@ -68,10 +81,15 @@ elif options.era == '2018':
 from BaconProd.Ntupler.myJecFromDB_cff    import setupJEC
 setupJEC(process,options.isData,JECTag)
 if options.isData:
-  process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
+	if options.isLocal:
+		process.jec.connect = cms.string('sqlite_file:/uscms/home/corderom/nobackup/2016/CMSSW_10_2_13/src/BaconProd/Utils/data/'+JECTag+'.db')
+	else:
+		process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
 else:
-  process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
-
+  	if options.isLocal:
+		process.jec.connect = cms.string('sqlite_file:/uscms/home/corderom/nobackup/2016/CMSSW_10_2_13/src/BaconProd/Utils/data/'+JECTag+'.db')
+	else:
+  		process.jec.connect = cms.string('sqlite:///src/BaconProd/Utils/data/'+JECTag+'.db')
 #--------------------------------------------------------------------------------
 # Import of standard configurations
 #================================================================================
@@ -81,7 +99,7 @@ process.load('Configuration/StandardSequences/MagneticField_38T_cff')
 
 process.load('TrackingTools/TransientTrack/TransientTrackBuilder_cfi')
 
-if options.era == '2017' or options.era == '2018':
+if options.era == '2017' or options.era == '2018ABC' or options.era == '2018D':
     process.load('RecoBTag.SoftLepton.SoftLeptonByMVAComputers_cff')
 
 process.pfNoPileUpJME = cms.EDFilter("CandPtrSelector", src = cms.InputTag("packedPFCandidates"), cut = cms.string("fromPV"))
@@ -171,7 +189,7 @@ elif options.era == '2017':
                            era='2017-Nov17ReReco', #era is new to select between 2016 / 2017,  it defaults to 2017
                            phoIDModules=[]) #bug with default modules for photon VID; off for now
 
-elif options.era == '2018':
+elif options.era == '2018ABC' or options.era == '2018D':
     setupEgammaPostRecoSeq(process,
                            runVID=True,
                            era='2018-Prompt', #era is new to select between 2016 / 2017,  it defaults to 2017
@@ -184,7 +202,7 @@ if options.era == '2016':
         UseJetEMPt = cms.bool(False),
         PrefiringRateSystematicUncty = cms.double(0.2),
         SkipWarnings = False)
-elif options.era == '2017' or options.era=='2018':
+elif options.era == '2017' or options.era == '2018ABC' or options.era == '2018D':
     process.prefiringweight = l1ECALPrefiringWeightProducer.clone(
         DataEra = cms.string("2017BtoF"), 
         UseJetEMPt = cms.bool(False),
@@ -260,7 +278,12 @@ elif options.era == '2017':
     else:
         #test_file = cms.untracked.vstring('/store/mc/RunIIFall17MiniAOD/QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8/MINIAODSIM/94X_mc2017_realistic_v10-v1/20000/46FB5EDE-F708-E811-A50F-0025905C53A4.root')
         test_file = cms.untracked.vstring('/store/mc/RunIIFall17MiniAOD/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/94X_mc2017_realistic_v10-v1/00000/005DC030-D3F4-E711-889A-02163E01A62D.root')
-elif options.era == '2018':
+elif options.era == '2018ABC':
+    if options.isData:
+        test_file = cms.untracked.vstring('/store/data/Run2018A/DoubleMuon/MINIAOD/17Sep2018-v2/00000/0DFD591F-DB0C-F447-9FBF-BAC1BF96D9B1.root')
+    else:
+        test_file = cms.untracked.vstring('/store/mc/RunIIAutumn18MiniAOD/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v1/90000/F6F754E3-9026-CC48-9018-FFBB087DADA5.root')
+elif options.era == '2018D':
     if options.isData:
         test_file = cms.untracked.vstring('/store/data/Run2018A/DoubleMuon/MINIAOD/17Sep2018-v2/00000/0DFD591F-DB0C-F447-9FBF-BAC1BF96D9B1.root')
     else:
@@ -289,7 +312,7 @@ process.options = cms.untracked.PSet(
 process.ntupler = cms.EDAnalyzer('NtuplerMod',
   skipOnHLTFail     = cms.untracked.bool(options.doHLTFilter),
   useTrigger        = cms.untracked.bool(True),
-  useTriggerObject  = cms.untracked.bool(False),
+  useTriggerObject  = cms.untracked.bool(True),
   TriggerObject     = cms.untracked.string("selectedPatTrigger"),
   TriggerFile       = cms.untracked.string(hlt_filename),
   useAOD            = cms.untracked.bool(False),
@@ -351,7 +374,7 @@ process.ntupler = cms.EDAnalyzer('NtuplerMod',
     edmPuppiName              = cms.untracked.string('puppi'),
     edmPuppiNoLepName         = cms.untracked.string('puppiNoLep'),
     usePuppi                  = cms.untracked.bool(True),
-    useTriggerObject          = cms.untracked.bool(False),
+    useTriggerObject          = cms.untracked.bool(True),
     edmEcalPFClusterIsoMapTag = cms.untracked.InputTag('electronEcalPFClusterIsolationProducer'),
     edmHcalPFClusterIsoMapTag = cms.untracked.InputTag('electronHcalPFClusterIsolationProducer'),
 
@@ -380,7 +403,7 @@ process.ntupler = cms.EDAnalyzer('NtuplerMod',
     edmPuppiName              = cms.untracked.string('puppi'),
     edmPuppiNoLepName         = cms.untracked.string('puppiNoLep'),
     usePuppi                  = cms.untracked.bool(True),
-    useTriggerObject          = cms.untracked.bool(False),    
+    useTriggerObject          = cms.untracked.bool(True),    
   ),
   
   Photon = cms.untracked.PSet(
@@ -391,6 +414,17 @@ process.ntupler = cms.EDAnalyzer('NtuplerMod',
     edmPhoMVASpring16     = cms.untracked.string('PhotonMVAEstimatorRun2Spring16NonTrigV1'),
     edmPhoMVAFall17V1     = cms.untracked.string('PhotonMVAEstimatorRunIIFall17v1'),
     edmPhoMVAFall17V2     = cms.untracked.string('PhotonMVAEstimatorRunIIFall17v2'),
+
+    eeReducedRecHitCollection = cms.InputTag("reducedEgamma","reducedEERecHits"), 
+    ebReducedRecHitCollection = cms.InputTag("reducedEgamma","reducedEBRecHits"), 
+    esReducedRecHitCollection = cms.InputTag("reducedEgamma","reducedESRecHits"),
+
+
+    phoChargedIsolationCollection       = cms.InputTag("photonIDValueMapProducer:phoChargedIsolation"),
+    phoNeutralHadronIsolationCollection = cms.InputTag("photonIDValueMapProducer:phoNeutralHadronIsolation"),
+    phoPhotonIsolationCollection        = cms.InputTag("photonIDValueMapProducer:phoPhotonIsolation"),
+    phoWorstChargeIsolationCollection   = cms.InputTag("photonIDValueMapProducer:phoWorstChargedIsolation"),
+
     useTriggerObject      = cms.untracked.bool(False),
   ),
   
@@ -808,7 +842,7 @@ process.ntupler = cms.EDAnalyzer('NtuplerMod',
   ),
   
   PFCand = cms.untracked.PSet(
-    isActive       = cms.untracked.bool(False),
+    isActive       = cms.untracked.bool(True),
     edmName        = cms.untracked.string('packedPFCandidates'),
     edmPVName      = cms.untracked.string('offlineSlimmedPrimaryVertices'),
     doAddDepthTime = cms.untracked.bool(False)
@@ -816,8 +850,8 @@ process.ntupler = cms.EDAnalyzer('NtuplerMod',
 )
 
 # overwrite parameters for different eras 
-if options.era == '2017' or options.era == '2018':
-    #process.ntupler.TriggerObject = cms.untracked.string("slimmedPatTrigger")
+if options.era == '2017' or options.era == '2018ABC' or options.era == '2018D':
+    process.ntupler.TriggerObject = cms.untracked.string("slimmedPatTrigger")
 
     #electron
     process.ntupler.Electron.edmEleMediumMVA = cms.untracked.string('mvaEleID-Fall17-noIso-V1-wp90')
@@ -934,7 +968,7 @@ else:
                                              process.selectedUpdatedPatJets*
                                              process.QGTagger              *
                                              process.ntupler)
-    elif options.era == '2017' or options.era == '2018':
+    elif options.era == '2017' or options.era == '2018ABC' or options.era == '2018D':
         process.baconSequence = cms.Sequence(
                                              process.BadPFMuonFilter          *
                                              process.BadChargedCandidateFilter*
