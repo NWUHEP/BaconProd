@@ -63,11 +63,12 @@ def main():
         #--------------------------------------------------------
         # This is the base config:
         #--------------------------------------------------------
-        from CRABClient.UserUtilities import config, getUsernameFromSiteDB
+        #from CRABClient.UserUtilities import config, getUsernameFromSiteDB
+        from CRABClient.UserUtilities import config
         config = config()
 
         config.General.requestName = None
-        config.General.workArea = '2016_data_prod'
+        config.General.workArea = '2016_data_prod_TEST_V2'
         config.General.transferOutputs = True
         config.General.transferLogs = True
 
@@ -75,6 +76,7 @@ def main():
         config.JobType.psetName = 'makingBacon_25ns_MINIAOD.py'
         config.JobType.pyCfgParams = ['isData=True', 'doHLTFilter=True', 'era=2016']
         config.JobType.outputFiles = ['Output.root']
+        config.JobType.allowUndistributedCMSSW = True
 
         config.Data.inputDataset = None
         config.Data.inputDBS = 'global'
@@ -82,9 +84,10 @@ def main():
         config.section_("Debug")
         config.Debug.extraJDL = ['+CMS_ALLOW_OVERFLOW=False']
         config.Site.whitelist = ["T2_US*"]
-        config.Data.splitting = 'EventAwareLumiBased'
-        config.Data.unitsPerJob = 50000
-        config.Data.totalUnits = 500000
+        config.Data.splitting = 'Automatic'
+        #config.Data.splitting = 'EventAwareLumiBased'
+        #config.Data.unitsPerJob = 50000
+        #config.Data.totalUnits = 500000
         config.Data.outputDatasetTag = None
         config.Data.outLFNDirBase = '/store/group/lpcbacon/jbueghly/'
 
@@ -114,7 +117,7 @@ def main():
                         ]
 
         for inDS in inputDatasets:
-            config.General.requestName = inDS.split('/')[1] + '_' + inDS.split('/')[2] 
+            config.General.requestName = (inDS.split('/')[1] + '_' + inDS.split('/')[2])[:99]
             config.Data.inputDataset = inDS
             config.Data.outputDatasetTag = '%s_%s' % (config.General.workArea, config.General.requestName)
             # Submit.

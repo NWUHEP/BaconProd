@@ -63,11 +63,12 @@ def main():
         #--------------------------------------------------------
         # This is the base config:
         #--------------------------------------------------------
-        from CRABClient.UserUtilities import config, getUsernameFromSiteDB
+        #from CRABClient.UserUtilities import config, getUsernameFromSiteDB
+        from CRABClient.UserUtilities import config
         config = config()
 
         config.General.requestName = None
-        config.General.workArea = '2016_mc_prod'
+        config.General.workArea = '2016_mc_prod_TEST_V2'
         config.General.transferOutputs = True
         config.General.transferLogs = True
 
@@ -75,6 +76,7 @@ def main():
         config.JobType.psetName = 'makingBacon_25ns_MINIAOD.py'
         config.JobType.pyCfgParams = ['isData=False', 'doHLTFilter=False', 'era=2016']
         config.JobType.outputFiles = ['Output.root']
+        config.JobType.allowUndistributedCMSSW = True
 
         config.Data.inputDataset = None
         config.Data.inputDBS = 'global'
@@ -82,9 +84,12 @@ def main():
         config.section_("Debug")
         config.Debug.extraJDL = ['+CMS_ALLOW_OVERFLOW=False']
         config.Site.whitelist = ["T2_US*"]
-        config.Data.splitting = 'EventAwareLumiBased'
-        config.Data.unitsPerJob = 50000
-        config.Data.totalUnits = 500000
+        config.Data.splitting = 'Automatic'
+        #config.Data.splitting = 'EventAwareLumiBased'
+        #config.Data.unitsPerJob = 50000
+        #config.Data.unitsPerJob = 1000
+        #config.Data.totalUnits = 500000
+        #config.Data.totalUnits = 5000
         config.Data.outputDatasetTag = None
         config.Data.outLFNDirBase = '/store/group/lpcbacon/jbueghly/'
 
@@ -93,12 +98,60 @@ def main():
 
         # Will submit one task for each of these input datasets.
         inputDatasets = [
+                            # background
+                            #'/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3_ext2-v1/MINIAODSIM',
+                            #'/ZGToLLG_01J_LoosePtlPtg_5f_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v1/MINIAODSIM',
+                            #'/TTJets_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/LLAJJ_EWK_MLL-50_MJJ-120_13TeV-madgraph-pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v1/MINIAODSIM',
+ 
+                            # signal
+                            #'/GluGluHToZG_M-125_13TeV_powheg_pythia8/cmkuo-ggF_HZg_M125_Summer16_minAODv3_v1-bd3e7bcff6c9bcad356ea4ed7e4f08b4/USER',
+                            #'/VBFHToZG_M-125_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3_ext1-v2/MINIAODSIM',
+                            #'/ttHToZG_ZToLL_M125_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/ZH_ZToAll_HToZG_ZToLL_M125_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/WplusH_HToZG_WToAll_ZToLL_M125_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/WminusH_HToZG_WToAll_ZToLL_M125_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+
+                            #'/GluGluHToZG_M-120_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3_ext1-v2/MINIAODSIM',
+                            #'/VBFHToZG_M-120_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/ttHToZG_ZToLL_M120_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/ZH_ZToAll_HToZG_ZToLL_M120_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/WplusH_HToZG_WToAll_ZToLL_M120_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/WminusH_HToZG_WToAll_ZToLL_M120_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+
+                            #'/GluGluHToZG_M-130_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3_ext1-v2/MINIAODSIM',
+                            #'/VBFHToZG_M-130_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/ttHToZG_ZToLL_M130_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/ZH_ZToAll_HToZG_ZToLL_M130_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/WplusH_HToZG_WToAll_ZToLL_M130_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/WminusH_HToZG_WToAll_ZToLL_M130_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+
+                            #'/GluGluHToMuMu_M125_TuneCP5_PSweights_13TeV_amcatnloFXFX_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v1/MINIAODSIM',
+                            #'/VBFHToMuMu_M125_TuneCP5_PSweights_13TeV_amcatnlo_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v1/MINIAODSIM',
+                            #'/ttHToMuMu_M125_TuneCP5_PSweights_13TeV-powheg-pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v1/MINIAODSIM',
+                            #'/ZH_HToMuMu_M125_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/WPlusH_HToMuMu_M125_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/WMinusH_HToMuMu_M125_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #
+                            #'/GluGluHToMuMu_M120_TuneCP5_PSweights_13TeV_amcatnloFXFX_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v1/MINIAODSIM',
+                            #'/VBFHToMuMu_M120_TuneCP5_PSweights_13TeV_amcatnlo_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v1/MINIAODSIM',
+                            #'/ttHToMuMu_M120_TuneCP5_PSweights_13TeV-powheg-pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v1/MINIAODSIM',
+                            #'/ZH_HToMuMu_M120_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/WPlusH_HToMuMu_M120_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/WMinusH_HToMuMu_M120_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+
+                            #'/GluGluHToMuMu_M130_TuneCP5_PSweights_13TeV_amcatnloFXFX_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v1/MINIAODSIM',
+                            #'/VBFHToMuMu_M130_TuneCP5_PSweights_13TeV_amcatnlo_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v1/MINIAODSIM',
+                            #'/ttHToMuMu_M130_TuneCP5_PSweights_13TeV-powheg-pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v1/MINIAODSIM',
+                            #'/ZH_HToMuMu_M130_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/WPlusH_HToMuMu_M130_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
+                            #'/WMinusH_HToMuMu_M130_13TeV_powheg_pythia8/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
 
                         
                         ]
 
         for inDS in inputDatasets:
-            config.General.requestName = inDS.split('/')[1] + '_' + inDS.split('/')[2] 
+            config.General.requestName = (inDS.split('/')[1] + '_' + inDS.split('/')[2])[:99]
             config.Data.inputDataset = inDS
             config.Data.outputDatasetTag = '%s_%s' % (config.General.workArea, config.General.requestName)
             # Submit.

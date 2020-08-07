@@ -837,6 +837,12 @@ process.ntupler = cms.EDAnalyzer('NtuplerMod',
 )
 
 # overwrite parameters for different eras 
+
+#if options.era == '2016' and options.isData == False:
+if options.era == '2016':
+    #process.ntupler.TriggerObject = cms.untracked.string("slimmedPatTrigger")
+    process.ntupler.useTriggerObject = cms.untracked.bool(False)
+
 if options.era == '2017' or options.era == '2018ABC' or options.era == '2018D':
     process.ntupler.TriggerObject = cms.untracked.string("slimmedPatTrigger")
 

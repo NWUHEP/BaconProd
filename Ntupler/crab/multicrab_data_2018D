@@ -63,7 +63,8 @@ def main():
         #--------------------------------------------------------
         # This is the base config:
         #--------------------------------------------------------
-        from CRABClient.UserUtilities import config, getUsernameFromSiteDB
+        #from CRABClient.UserUtilities import config, getUsernameFromSiteDB
+        from CRABClient.UserUtilities import config
         config = config()
 
         config.General.requestName = None
@@ -82,9 +83,10 @@ def main():
         config.section_("Debug")
         config.Debug.extraJDL = ['+CMS_ALLOW_OVERFLOW=False']
         config.Site.whitelist = ["T2_US*"]
-        config.Data.splitting = 'EventAwareLumiBased'
-        config.Data.unitsPerJob = 50000
-        config.Data.totalUnits = 500000
+        config.Data.splitting = 'Automatic'
+        #config.Data.splitting = 'EventAwareLumiBased'
+        #config.Data.unitsPerJob = 50000
+        #config.Data.totalUnits = 500000
         config.Data.outputDatasetTag = None
         config.Data.outLFNDirBase = '/store/group/lpcbacon/jbueghly/'
 
@@ -93,12 +95,14 @@ def main():
 
         # Will submit one task for each of these input datasets.
         inputDatasets = [
+                            #'/DoubleMuon/Run2018D-PromptReco-v2/MINIAOD',
 
+                            #'/EGamma/Run2018D-22Jan2019-v2/MINIAOD',
                         
                         ]
 
         for inDS in inputDatasets:
-            config.General.requestName = inDS.split('/')[1] + '_' + inDS.split('/')[2] 
+            config.General.requestName = (inDS.split('/')[1] + '_' + inDS.split('/')[2])[:99]
             config.Data.inputDataset = inDS
             config.Data.outputDatasetTag = '%s_%s' % (config.General.workArea, config.General.requestName)
             # Submit.
