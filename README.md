@@ -45,7 +45,8 @@ cmsRun makingBacon_25ns_MINIAOD.py isData=<isData> doHLTFilter=<doHLTFilter> era
  * isData: True for data, False for MC
  * doHLTFilter: if True, filter events that don't pass Bacon triggers
     + usually True for Data and False for MC
- * era: 2016, 2017, or 2018
+ * era: 2016, 2017, 2018ABC, or 2018D
+    + note that 2018ABC and 2018D are equivalent for 2018 MC, but different for data
 
 Running with CRAB:
 ----------
@@ -59,13 +60,23 @@ Navigate to the BaconProd/Ntupler/crab directory. CRAB submission settings are c
 
 Specify the relevant splitting, configuration arguments, and datasets. Then run with:
 ```
-./multicrab -c submit
-``` 
+./multicrab_$data_or_mc_$era -c submit
+```
 
 and check status with 
 ```
-./multicrab -c status -w <path to crab workArea>
+./multicrab_$data_or_mc_$era -c status -w <path to crab workArea>
 ```
+
+It is important to use the proper multicrab file for the sample you are submitting to make sure the submission uses 
+the proper settings for data or MC and for the year (and run period for 2018 data). 
+
+You will need to update the line in the multicrab file starting with config.Data.outLFNDirBase to give a path to 
+an EOS directory where you have write access. You will probably also want to update the line starting with config.General.workArea. 
+This sets the name of the directory where the crab submission files will be located.
+
+Note that the multicrab configuration has splitting set to 'Automatic.' Automatic splitting is recommended for a first submission. 
+Switching to a custom splitting can be tried later if the automatic splitting causes problems. 
 
 Merging Output and Checking for Duplicates:
 ----------
